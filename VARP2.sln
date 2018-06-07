@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VARP2", "VARP2.csproj", "{B3D9558F-3393-5158-95EB-C6F7B0794A20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VARP2.Editor", "VARP2.Editor.csproj", "{25CA68E2-4543-6FC1-C595-3A7EA1C8BEAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3D9558F-3393-5158-95EB-C6F7B0794A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3D9558F-3393-5158-95EB-C6F7B0794A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3D9558F-3393-5158-95EB-C6F7B0794A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3D9558F-3393-5158-95EB-C6F7B0794A20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25CA68E2-4543-6FC1-C595-3A7EA1C8BEAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25CA68E2-4543-6FC1-C595-3A7EA1C8BEAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25CA68E2-4543-6FC1-C595-3A7EA1C8BEAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25CA68E2-4543-6FC1-C595-3A7EA1C8BEAF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
