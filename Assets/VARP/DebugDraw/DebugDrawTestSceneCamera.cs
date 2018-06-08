@@ -6,6 +6,9 @@ using VARP.DebugDraw;
 
 public class DebugDrawTestSceneCamera : MonoBehaviour {
 
+    public bool renderInEditor;
+    public bool renderInPostRender;
+    public bool renderInEndOfFrame;
 
     private void Awake ( )
     {
@@ -16,13 +19,17 @@ public class DebugDrawTestSceneCamera : MonoBehaviour {
      * To render objects in the GameView */
     IEnumerator OnPostRender ( )
     {
-            yield return new WaitForEndOfFrame ( );
+        if (renderInPostRender)
+            DebugDraw.Render ( );
+        yield return new WaitForEndOfFrame ( );
+        if ( renderInEndOfFrame )
             DebugDraw.Render (  );
     }
 
     void OnRenderObject()
     {
-        DebugDraw.Render ( );
+        if ( renderInEditor && Camera.current != null && Camera.current.name == "SceneCamera")
+            DebugDraw.Render ( );
     }
 
     private void OnApplicationQuit ( )

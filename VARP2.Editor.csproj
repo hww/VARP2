@@ -297,15 +297,15 @@
     <Compile Include="Assets\VARP\DataStructures\Editor\DoubleLinkedListTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\3dParty\BitmapFontImporter\Examples\Font1\font1.fnt" />
-    <None Include="Assets\3dParty\BitmapFontImporter\Examples\Font2\font2.fnt" />
-    <None Include="Assets\3dParty\BitmapFontImporter\Examples\font3\font3.fnt" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\BFILogic.cginc" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\Font2.shader" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\Font3.shader" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\Font4.shader" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\Font5.shader" />
-    <None Include="Assets\Resources\VARP\DebugDraw\DebugFont.fnt" />
+    <None Include="Assets\Resources\VARP\DebugDraw\FLFontZOff.shader" />
+    <None Include="Assets\Resources\VARP\DebugDraw\GLFont.fnt" />
+    <None Include="Assets\Resources\VARP\DebugDraw\GLFontZOff.shader" />
+    <None Include="Assets\Resources\VARP\DebugDraw\GLFontZOn.shader" />
     <None Include="Assets\Resources\VARP\DebugDraw\GLlineZOff.shader" />
     <None Include="Assets\Resources\VARP\DebugDraw\GLlineZOn.shader" />
     <None Include="Assets\mcs.rsp" />

@@ -292,14 +292,16 @@
     <Compile Include="Assets\VARP\DataStructures\Names.cs" />
     <Compile Include="Assets\VARP\DataStructures\SingleLinkedList.cs" />
     <Compile Include="Assets\VARP\DataStructures\Tuple.cs" />
-    <Compile Include="Assets\VARP\DebugDraw\DebugCircleRenderer.cs" />
+    <Compile Include="Assets\VARP\DataStructures\Variant.cs" />
     <Compile Include="Assets\VARP\DebugDraw\DebugDraw.cs" />
     <Compile Include="Assets\VARP\DebugDraw\DebugDrawTestScene.cs" />
     <Compile Include="Assets\VARP\DebugDraw\DebugDrawTestSceneCamera.cs" />
-    <Compile Include="Assets\VARP\DebugDraw\DebugLinesRenderer.cs" />
-    <Compile Include="Assets\VARP\DebugDraw\DebugQuadRenderer.cs" />
-    <Compile Include="Assets\VARP\DebugDraw\DebugTextRenderer.cs" />
-    <Compile Include="Assets\VARP\DebugDraw\DebugTrisRenderer.cs" />
+    <Compile Include="Assets\VARP\DebugDraw\DrawCircles.cs" />
+    <Compile Include="Assets\VARP\DebugDraw\DrawLines.cs" />
+    <Compile Include="Assets\VARP\DebugDraw\DrawQuads.cs" />
+    <Compile Include="Assets\VARP\DebugDraw\DrawStrings.cs" />
+    <Compile Include="Assets\VARP\DebugDraw\DrawTriangles.cs" />
+    <Compile Include="Assets\VARP\GameLoopBehaviour.cs" />
     <Compile Include="Assets\VARP\Interfaces\IListNode.cs" />
     <Compile Include="Assets\VARP\Profiler\Profile.cs" />
     <Compile Include="Assets\VARP\SubSystems\SubSystem.cs" />
@@ -307,15 +309,15 @@
     <Compile Include="Assets\VARP\UnityFont\TextRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\3dParty\BitmapFontImporter\Examples\Font1\font1.fnt" />
-    <None Include="Assets\3dParty\BitmapFontImporter\Examples\Font2\font2.fnt" />
-    <None Include="Assets\3dParty\BitmapFontImporter\Examples\font3\font3.fnt" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\BFILogic.cginc" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\Font2.shader" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\Font3.shader" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\Font4.shader" />
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\Font5.shader" />
-    <None Include="Assets\Resources\VARP\DebugDraw\DebugFont.fnt" />
+    <None Include="Assets\Resources\VARP\DebugDraw\FLFontZOff.shader" />
+    <None Include="Assets\Resources\VARP\DebugDraw\GLFont.fnt" />
+    <None Include="Assets\Resources\VARP\DebugDraw\GLFontZOff.shader" />
+    <None Include="Assets\Resources\VARP\DebugDraw\GLFontZOn.shader" />
     <None Include="Assets\Resources\VARP\DebugDraw\GLlineZOff.shader" />
     <None Include="Assets\Resources\VARP\DebugDraw\GLlineZOn.shader" />
     <None Include="Assets\mcs.rsp" />

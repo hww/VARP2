@@ -11,11 +11,12 @@ namespace VARP.UnityFontTools
             material.SetPass ( 0 );
             GL.invertCulling = true;
             GL.PushMatrix ( );
-            /** Screenspace is defined in pixels.The bottom-left of the screen is ( 0,0);
-              * the right-top is ( pixelWidth, pixelHeight ).The z position is in world units from the camera. */
+            // Screenspace is defined in pixels.The bottom-left of the screen is (0,0);
+            // the right-top is ( pixelWidth, pixelHeight ).The z position is in world units from the camera. 
             GL.LoadPixelMatrix ( );
             GL.Begin ( GL.QUADS );
         }
+
 
         public static void RenderTextAfter ( )
         {
@@ -24,9 +25,70 @@ namespace VARP.UnityFontTools
             GL.invertCulling = false;
         }
 
+        public static void RenderTextBefore3D ( Font font, Material material )
+        {
+            material.SetPass ( 0 );
+            GL.invertCulling = true;
+            GL.PushMatrix ( );
+        }
+
+        public static void RenderTextAfter3D ( )
+        {
+            GL.PopMatrix ( );
+            GL.invertCulling = false;
+        }
+
         const int TAB_SIZE = 8;
 
-        public static void RenderText ( Vector3 position, Font font, string text, float scale = 1f, FontStyle fontStyle = FontStyle.Normal )
+        public static void RenderText ( Vector3 position, Font font, string text )
+        {
+            CharacterInfo info;
+            CharacterInfo space;
+            font.GetCharacterInfo ( ' ', out space );
+            Vector3 pos = position;
+            pos.y -= font.lineHeight;
+            var x = 0;
+            var lineHeight = font.lineHeight;
+            var spaceWidth = space.advance;
+            foreach ( char c in text )
+            {
+                switch ( c )
+                {
+                    case '\n':
+                        x = 0;
+                        pos.x = position.x;
+                        pos.y -= lineHeight;
+                        break;
+                    case '\t':
+                        var nextTabColumn = TAB_SIZE * ( x / TAB_SIZE + 1 );
+                        pos.x = position.x + spaceWidth * nextTabColumn;
+                        x = nextTabColumn;
+                        break;
+                    case ' ':
+                        pos.x += spaceWidth;
+                        x++;
+                        break;
+                    default:
+                        if ( font.GetCharacterInfo ( c, out info ) )
+                        {
+                            GL.MultiTexCoord ( 0, info.uvTopLeft );
+                            GL.Vertex ( pos + new Vector3 ( info.minX, info.maxY, 0 ) );
+                            GL.MultiTexCoord ( 0, info.uvTopRight );
+                            GL.Vertex ( pos + new Vector3 ( info.maxX, info.maxY, 0 ) );
+                            GL.MultiTexCoord ( 0, info.uvBottomRight );
+                            GL.Vertex ( pos + new Vector3 ( info.maxX, info.minY, 0 ) );
+                            GL.MultiTexCoord ( 0, info.uvBottomLeft );
+                            GL.Vertex ( pos + new Vector3 ( info.minX, info.minY, 0 ) );
+                            pos.x += info.advance;
+                            x++;
+                        }
+                        break;
+                }
+
+            }
+        }
+
+        public static void RenderText ( Vector3 position, Font font, string text, float scale )
         {
             CharacterInfo info;
             CharacterInfo space;
@@ -76,10 +138,8 @@ namespace VARP.UnityFontTools
                         }
                         break;
                 }
-
             }
         }
-
 
         public static void BuildTextMesh ( string str, Font font, ref Vector3[] vertices, ref int[] triangles, ref Vector2[] uv )
         {

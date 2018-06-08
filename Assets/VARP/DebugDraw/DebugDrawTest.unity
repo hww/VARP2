@@ -206,6 +206,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1776e652adbad4db1aa17aa0d6cfeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderInEditor: 1
+  renderInPostRender: 1
+  renderInEndOfFrame: 0
 --- !u!1 &876362945
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,6 +239,7 @@ MonoBehaviour:
   update: 1
   onDrawGizmos: 0
   primitive: 10
+  zTestOn: 0
   duration: 0
   size: 1
   color: {r: 1, g: 0, b: 0, a: 1}
@@ -349,6 +353,7 @@ MonoBehaviour:
   update: 1
   onDrawGizmos: 0
   primitive: 8
+  zTestOn: 0
   duration: 0
   size: 1
   color: {r: 1, g: 0, b: 0, a: 1}

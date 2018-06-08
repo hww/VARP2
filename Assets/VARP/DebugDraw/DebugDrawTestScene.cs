@@ -25,6 +25,7 @@ public class DebugDrawTestScene : MonoBehaviour {
     }
 
     public Primitive primitive;
+    public bool zTestOn;
     public float duration = 0;
     public float size = 1f;
     public Color color = Color.white;
@@ -55,40 +56,40 @@ public class DebugDrawTestScene : MonoBehaviour {
         switch ( primitive )
         {
             case Primitive.Line:
-                DebugDraw.AddLine ( transform.position, Vector3.zero, color, duration );
+                DebugDraw.AddLine ( transform.position, Vector3.zero, color, 1, duration, zTestOn );
                 break;
             case Primitive.Ray:
-                DebugDraw.AddRay ( transform.position, transform.forward, color, duration );
+                DebugDraw.AddRay ( transform.position, transform.forward, color, 1, duration, zTestOn );
                 break;
             case Primitive.Triangle:
-                DebugDraw.AddTriangle ( transform.position, transform.position + transform.forward, transform.position + transform.up, color, duration );
+                DebugDraw.AddTriangle ( transform.position, transform.position + transform.forward, transform.position + transform.up, color, duration, 1, zTestOn );
                 break;
             case Primitive.Quad:
                 DebugDraw.AddQuad ( transform.position, 
                     transform.position + transform.forward, 
                     transform.position + transform.up, 
-                    transform.position + transform.right, color, duration );
+                    transform.position + transform.right, color, duration, 1, zTestOn );
                 break;
             case Primitive.Plane:
-                DebugDraw.AddPlane ( transform.position, transform.forward, size, color, duration );
+                DebugDraw.AddPlane ( transform.position, transform.forward, size, color, duration, zTestOn );
                 break;
             case Primitive.Cross:
-                DebugDraw.AddCross ( transform.position, size, color, duration );
+                DebugDraw.AddCross ( transform.position, size, color, duration, zTestOn );
                 break;
             case Primitive.Circle:
-                DebugDraw.AddCircle ( transform.position, transform.forward, size, color, duration );
+                DebugDraw.AddCircle ( transform.position, transform.forward, size, color, duration, zTestOn );
                 break;
             case Primitive.Sphere:
-                DebugDraw.AddSphere ( transform.position, size, color, duration );
+                DebugDraw.AddSphere ( transform.position, size, color, duration, zTestOn );
                 break;
             case Primitive.Box:
-                DebugDraw.AddBox ( transform.position, transform.rotation, transform.localScale, color, duration );
+                DebugDraw.AddBox ( transform.position, transform.rotation, transform.localScale, color, duration, zTestOn );
                 break;
             case Primitive.Axes:
-                DebugDraw.AddAxes ( transform, size, color, duration );
+                DebugDraw.AddAxes ( transform, size, color, duration, zTestOn );
                 break;
             case Primitive.Text:
-                DebugDraw.AddText ( transform.position, text, color, duration );
+                DebugDraw.AddText ( transform.position, text, color, duration, zTestOn );
                 break;
         }
     }

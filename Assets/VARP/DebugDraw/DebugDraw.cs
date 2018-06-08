@@ -11,7 +11,7 @@ namespace VARP.DebugDraw
                         float duration = 0f,
                         bool depthEnabled = true )
         {
-            var renderer = depthEnabled ? LineZOn : LineZOff;
+            var renderer = depthEnabled ? LinesZOn : LinesZOff;
             renderer.Add ( point1, point2, color, Time.time + duration );
         }
 
@@ -22,7 +22,7 @@ namespace VARP.DebugDraw
                 float duration = 0f,
                 bool depthEnabled = true )
         {
-            var renderer = depthEnabled ? LineZOn : LineZOff;
+            var renderer = depthEnabled ? LinesZOn : LinesZOff;
             renderer.Add ( point1, point1 + direction, color, Time.time + duration );
             AddBox ( point1, Quaternion.identity, centerPointBoxSize, color, duration );
         }
@@ -35,7 +35,7 @@ namespace VARP.DebugDraw
                           float duration = 0f,
                           bool depthEnabled = true )
         {
-            var renderer = depthEnabled ? TrisZOn : TrisZOff;
+            var renderer = depthEnabled ? TrianglesZOn : TrianglesZOff;
             renderer.Add ( vertex1, vertex2, vertex3, color, Time.time + duration );
         }
 
@@ -48,7 +48,7 @@ namespace VARP.DebugDraw
                   float duration = 0f,
                   bool depthEnabled = true )
         {
-            var renderer = depthEnabled ? QuadZOn : QuadZOff;
+            var renderer = depthEnabled ? QuadsZOn : QuadsZOff;
             renderer.Add ( vertex1, vertex2, vertex3, vertex4, color, Time.time + duration );
         }
 
@@ -61,7 +61,7 @@ namespace VARP.DebugDraw
             var up = Vector3.up * size;
             var right = Vector3.right * size;
             var forward = Vector3.forward * size;
-            var renderer = depthEnabled ? LineZOn : LineZOff;
+            var renderer = depthEnabled ? LinesZOn : LinesZOff;
             var hideAt = Time.time + duration;
             renderer.Add ( position - up, position + up, color, hideAt );
             renderer.Add ( position - right, position + right, color, hideAt );
@@ -75,7 +75,7 @@ namespace VARP.DebugDraw
                         float duration = 0f,
                         bool depthEnabled = true )
         {
-            var renderer = depthEnabled ? CircleZOn : CircleZOff;
+            var renderer = depthEnabled ? CirclesZOn : CirclesZOff;
             renderer.Add ( center, normal.normalized, radius, color, Time.time + duration );
         }
 
@@ -89,7 +89,7 @@ namespace VARP.DebugDraw
                         bool depthEnabled = true )
         {
 
-            var renderer = depthEnabled ? CircleZOn : CircleZOff;
+            var renderer = depthEnabled ? CirclesZOn : CirclesZOff;
             var hideAt = Time.time + duration;
             if ( radialSegments > 2 )
             {
@@ -142,7 +142,7 @@ namespace VARP.DebugDraw
             Vector3 y = rotation * new Vector3 ( 0, size.y, 0 );
             Vector3 z = rotation * new Vector3 ( 0, 0, size.z );
 
-            var renderer = depthEnabled ? LineZOn : LineZOff;
+            var renderer = depthEnabled ? LinesZOn : LinesZOff;
             var hideAt = Time.time + duration;
             // Bottom
             renderer.Add ( min, min + x, color, hideAt );
@@ -218,6 +218,14 @@ namespace VARP.DebugDraw
                       bool depthEnabled = true )
         {
 
+            var size = ( maxCoords - minCoords ) * 0.5f;
+            var center = minCoords + size * 0.5f;
+            AddBox ( center,
+                     Quaternion.identity,
+                     size,
+                     color,
+                     duration,
+                     depthEnabled );
         }
 
         public static void AddOBB ( Matrix4x4 centerTransform,
@@ -228,11 +236,8 @@ namespace VARP.DebugDraw
                      float duration = 0f,
                      bool depthEnabled = true )
         {
-
+            throw new System.NotImplementedException ( );
         }
-
-
-        const float FONT_SCALE = 0.25f;
 
         public static void AddText ( Vector3 position,
             string text,
@@ -240,8 +245,9 @@ namespace VARP.DebugDraw
             float duration = 0f,
             bool depthEnabled = true )
         {
-            var renderer = depthEnabled ? TextZOn : TextZOff;
-            renderer.Add ( position, text, color, FONT_SCALE, Time.time + duration );
+           // Debug.Assert ( depthEnabled == false, "Not implemented shader");
+            var renderer = depthEnabled ? StringsZOn : StringsZOff;
+            renderer.Add ( position, text, color, Time.time + duration );
         }
 
         public static void Init()
@@ -250,25 +256,25 @@ namespace VARP.DebugDraw
                 return;
             IsInitialized = true;
 
-            TextFont = ReadFont ( "VARP/DebugDraw/DebugFont" );
+            TextFont = ReadFont ( "VARP/DebugDraw/GLFont" );
 
             LineMaterialZOff = ReadMaterial ( "VARP/DebugDraw/GLlineZOff" );
             LineMaterialZOn = ReadMaterial ( "VARP/DebugDraw/GLlineZOn" );
-            TextMaterialZOff = ReadMaterial ( "VARP/DebugDraw/TextZOff" );
-            TextMaterialZOn = ReadMaterial ( "VARP/DebugDraw/TextZOn" );
+            TextMaterialZOff = ReadMaterial ( "VARP/DebugDraw/GLFontZOff" );
+            TextMaterialZOn = ReadMaterial ( "VARP/DebugDraw/GLFontZOn" );
 
-            LineZOff = new DebugLineRenderer ( INITIAL_PRIMITIVES_QUANTITY );
-            QuadZOff = new DebugQuadRenderer ( INITIAL_PRIMITIVES_QUANTITY );
-            TrisZOff = new DebugTrisRenderer ( INITIAL_PRIMITIVES_QUANTITY );
-            LineZOn = new DebugLineRenderer ( INITIAL_PRIMITIVES_QUANTITY );
-            QuadZOn = new DebugQuadRenderer ( INITIAL_PRIMITIVES_QUANTITY );
-            TrisZOn = new DebugTrisRenderer ( INITIAL_PRIMITIVES_QUANTITY );
+            LinesZOff = new DrawLines ( INITIAL_PRIMITIVES_QUANTITY );
+            QuadsZOff = new DrawQuads ( INITIAL_PRIMITIVES_QUANTITY );
+            TrianglesZOff = new DrawTriangles ( INITIAL_PRIMITIVES_QUANTITY );
+            LinesZOn = new DrawLines ( INITIAL_PRIMITIVES_QUANTITY );
+            QuadsZOn = new DrawQuads ( INITIAL_PRIMITIVES_QUANTITY );
+            TrianglesZOn = new DrawTriangles ( INITIAL_PRIMITIVES_QUANTITY );
 
-            CircleZOff = new DebugCircleRenderer ( INITIAL_PRIMITIVES_QUANTITY );
-            CircleZOn = new DebugCircleRenderer ( INITIAL_PRIMITIVES_QUANTITY );
+            CirclesZOff = new DrawCircles ( INITIAL_PRIMITIVES_QUANTITY );
+            CirclesZOn = new DrawCircles ( INITIAL_PRIMITIVES_QUANTITY );
 
-            TextZOff = new DebugTextRenderer ( INITIAL_PRIMITIVES_QUANTITY );
-            TextZOn = new DebugTextRenderer ( INITIAL_PRIMITIVES_QUANTITY );
+            StringsZOff = new DrawStrings ( INITIAL_PRIMITIVES_QUANTITY );
+            StringsZOn = new DrawStrings ( INITIAL_PRIMITIVES_QUANTITY );
         }
 
         private static Font ReadFont( string fontPath )
@@ -291,17 +297,17 @@ namespace VARP.DebugDraw
         {
             IsInitialized = false;
 
-            LineZOff.Dispose ( );
-            QuadZOff.Dispose ( );
-            TrisZOff.Dispose ( );
-            CircleZOff.Dispose ( );
-            TextZOff.Dispose ( );
+            LinesZOff.Dispose ( );
+            QuadsZOff.Dispose ( );
+            TrianglesZOff.Dispose ( );
+            CirclesZOff.Dispose ( );
+            StringsZOff.Dispose ( );
 
-            LineZOn.Dispose ( );
-            QuadZOn.Dispose ( );
-            TrisZOn.Dispose ( );
-            CircleZOn.Dispose ( );
-            TextZOn.Dispose ( );
+            LinesZOn.Dispose ( );
+            QuadsZOn.Dispose ( );
+            TrianglesZOn.Dispose ( );
+            CirclesZOn.Dispose ( );
+            StringsZOn.Dispose ( );
 
             LineMaterialZOff = null;
             LineMaterialZOn = null;
@@ -323,18 +329,18 @@ namespace VARP.DebugDraw
             try
             {
                 // Depth Test On
-                LineZOn.Render ( LineMaterialZOn );
-                CircleZOn.Render ( LineMaterialZOn );
-                TrisZOn.Render ( LineMaterialZOn );
-                QuadZOn.Render ( LineMaterialZOn );
-                TextZOn.Render ( TextFont, TextMaterialZOn );
+                LinesZOn.Render ( LineMaterialZOn );
+                CirclesZOn.Render ( LineMaterialZOn );
+                TrianglesZOn.Render ( LineMaterialZOn );
+                QuadsZOn.Render ( LineMaterialZOn );
+                StringsZOn.Render3D ( TextFont, TextMaterialZOn );
 
                 // Depth Test Off
-                LineZOff.Render ( LineMaterialZOff );
-                CircleZOff.Render ( LineMaterialZOff );
-                TrisZOff.Render ( LineMaterialZOff );
-                QuadZOff.Render ( LineMaterialZOff );
-                TextZOff.Render ( TextFont, TextMaterialZOff );
+                LinesZOff.Render ( LineMaterialZOff );
+                CirclesZOff.Render ( LineMaterialZOff );
+                TrianglesZOff.Render ( LineMaterialZOff );
+                QuadsZOff.Render ( LineMaterialZOff );
+                StringsZOff.Render ( TextFont, TextMaterialZOff );
             }
             catch (System.Exception ex)
             {
@@ -358,18 +364,16 @@ namespace VARP.DebugDraw
         static Material TextMaterialZOn;
         static Font TextFont;
 
-        static DebugLineRenderer LineZOff;
-        static DebugQuadRenderer QuadZOff;
-        static DebugTrisRenderer TrisZOff;
-        static DebugCircleRenderer CircleZOff;
-        static DebugTextRenderer TextZOff;
+        static DrawLines LinesZOff;
+        static DrawQuads QuadsZOff;
+        static DrawCircles CirclesZOff;
+        static DrawStrings StringsZOff;
+        static DrawTriangles TrianglesZOff;
 
-        static DebugLineRenderer LineZOn;
-        static DebugQuadRenderer QuadZOn;
-        static DebugTrisRenderer TrisZOn;
-        static DebugCircleRenderer CircleZOn;
-        static DebugTextRenderer TextZOn;
+        static DrawLines LinesZOn;
+        static DrawQuads QuadsZOn;
+        static DrawCircles CirclesZOn;
+        static DrawStrings StringsZOn;
+        static DrawTriangles TrianglesZOn;
     }
-
-
 }
