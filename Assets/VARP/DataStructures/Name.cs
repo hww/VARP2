@@ -49,95 +49,140 @@ namespace VARP.DataStructures
 
     public struct Name
     {
+        // -- Constructors ------------------------------------------------------------------------
+
         public Name ( int n ) 
         {
             index = n;
         }
 
-        public Name ( Names name )
+        public Name ( EName name )
         {
             index = (int)name;
         }
 
-        public Name (string name, FindName findType)
+        public Name ( Name other )
+        {
+            index = other.index;
+        }
+
+        public Name (string name, FindName findType = FindName.Add)
         {
             UnityEngine.Debug.Assert ( name != null );
-	        index = 0;
+            UnityEngine.Debug.Assert ( Initialized );
+            index = 0;
 	        if ( name != NULL_NAME )
 	        {
 		        //	Search for existing entry.
 		        int hashIndex = GetStrigHash ( name ) & HASH_TABLE_INDEX_MASK;
-                int tempHash = nameHash[ hashIndex ];
+                int tempHash = NamesHash[ hashIndex ];
                 while ( tempHash != 0 )
                 {
-                    if ( name != names[ tempHash ].name ) 
+                    if ( name == Names[ tempHash ].name ) 
                     {
                         index = tempHash;
                         break;
                     }
-                    tempHash = names[ tempHash ].nextHash;
+                    tempHash = Names[ tempHash ].nextHash;
                 }
                 if (tempHash == 0 && findType == FindName.Add)
 		        {
                     //	Add a new entry.
-                    new NameEntry ( name, nameHash[ hashIndex ] );
-			        nameHash[ hashIndex ] = index;
-			        memorySizeForNames += name.Length;
+                    index = Names.Count;
+                    Names.Add(new NameEntry ( name, NamesHash[ hashIndex ] ));
+			        NamesHash[ hashIndex ] = index;
+			        MemorySizeForNames += name.Length;
                 }
                 UnityEngine.Debug.Assert ( index <= 0xffff );
             }
         }
 
+        // -- Constructors ------------------------------------------------------------------------
+
         public bool IsValid ( )
         {
-            return index >= 0 && index < names.Count && names[ index ] != null;
+            return index >= 0 && index < Names.Count && Names[ index ] != null;
         }
+
+        // -- Cast to other type  --------------------------------------------------------------
 
         public override string ToString()
         {
-            return names[ index ].name;
+            if (Initialized)
+                return index < Names.Count ? Names[ index ].name : "NotValid";
+            else
+                return "NotInitialized";
         }
+
+        // explicit conversion (Variant)true
+        public static explicit operator string ( Name name )
+        {
+            return name.ToString();
+        }
+
+        // -- Comparison ------------------------------------------------------------------------
+
+        public override bool Equals ( object obj )
+        {
+            if ( obj == null || GetType ( ) != obj.GetType ( ) )
+                return false;
+
+            return index == ((Name)obj).index ;
+        }
+
+        public override int GetHashCode ( )
+        {
+            return index;
+        }
+
+        // -- Fields -----------------------------------------------------------------------------
+
+        public int index;
+
+        // -- Static methods ---------------------------------------------------------------------
 
         public static void Init ( )
         {
             Clear ( );
-            foreach ( Names value in System.Enum.GetValues ( typeof ( Names ) ) )
-                new Name ( value.ToString(), FindName.Add );
-            initialized = true;
+            foreach ( EName name in System.Enum.GetValues ( typeof ( EName ) ) )
+            {
+                var namestring = name.ToString ( );
+                var nameindex = (int)name;
+                int hashIndex = GetStrigHash ( name.ToString ( ) ) & HASH_TABLE_INDEX_MASK;
+                Names.Add ( new NameEntry ( namestring, NamesHash[ hashIndex ] ) );
+                NamesHash[ hashIndex ] = nameindex;
+                MemorySizeForNames += namestring.Length;
+            }
+            Initialized = true;
         }
 
         private static void Clear ( )
         {
-            for ( var i = 0 ; i < nameHash.Length ; i++ )
-                nameHash[ i ] = 0;
-            names.Clear ( );
-            memorySizeForNames = 0;
+            for ( var i = 0 ; i < NamesHash.Length ; i++ )
+                NamesHash[ i ] = 0;
+            Names.Clear ( );
+            MemorySizeForNames = 0;
         }
 
         public static void DeInit ( )
         {
             Clear ( );
-            initialized = false;
+            Initialized = false;
         }
 
-        public static string SafeString( Names index )
-	    {
-		    return initialized ? names[ (int)index ].name : "Uninitialized";
-	    }
-
-        public static int GetMaxNames ( )
+        public static int GetNamesCount ( )
         {
-            return names.Count;
+            return Names.Count;
         }
 
         public static NameEntry GetEntry ( int i )
         {
-            return names[ i ];
+            return Names[ i ];
         }
 
         public static bool GetInitialized ( )
         {
-            return initialized;
+            return Initialized;
         }
 
         public static int GetStrigHash ( string str )
@@ -152,37 +197,39 @@ namespace VARP.DataStructures
             return result;
         }
 
-        public static implicit operator Name ( Names name )
+        // -- Static factory ---------------------------------------------------------------------
+
+        public static Name Intern ( string name )
         {
-            return new Name ( name );
+            return new Name ( name, FindName.Add );
         }
 
-
-        public int index;
-
-        // ======================================================================================
-        // The first element reserved for NullName
-        // Array: nameHash[]                         Array: names[]
-        // -----------------------------      0      ------------------------------
-        // | [0]      0 (means first)  |------------>| name:     "None"           |    
-        // -----------------------------             | hashNext: 1                |---+
-        // | [1]      2                |-----+       ------------------------------   |
-        // -----------------------------     |       | name:     "bar"            |<--+
-        // | ...     ...               |     |       | hashNext: 0 (means last)   |
-        // -----------------------------     |       ------------------------------
-        // | [N]      0                |     +------>| name:     "baz"            |
-        // -----------------------------             | hashNext: 0 (means last)   |
-        //                                           ------------------------------
-        // ======================================================================================
+        // -- Static fields  ---------------------------------------------------------------------
 
         private const int HASH_TABLE_SIZE = 4096;
         private const int HASH_TABLE_INDEX_MASK = HASH_TABLE_SIZE - 1;
         private const int INITIAL_NAMES_QUANTITY = 4096;
 
-        private static readonly string NULL_NAME = Names.None.ToString();
-        private static List<NameEntry> names = new List<NameEntry> ( INITIAL_NAMES_QUANTITY );
-        private static int[] nameHash = new int[ HASH_TABLE_SIZE ];
-        private static bool initialized;
-        private static int memorySizeForNames;
+        /* 
+          * The first element reserved for NullName 
+          *
+          * Array: nameHash[]                         Array: names[]
+          * -----------------------------      0      ------------------------------
+          * | [0]      0 (means first)  |------------>| name:     "None"           |    
+          * -----------------------------             | hashNext: 1                |---+
+          * | [1]      2                |-----+       ------------------------------   |
+          * -----------------------------     |       | name:     "bar"            |<--+
+          * | ...     ...               |     |       | hashNext: 0 (means last)   |
+          * -----------------------------     |       ------------------------------
+          * | [N]      0                |     +------>| name:     "baz"            |
+          * -----------------------------             | hashNext: 0 (means last)   |
+          *                                          ------------------------------
+          */
+
+        private static readonly string NULL_NAME = EName.None.ToString();
+        private static List<NameEntry> Names = new List<NameEntry> ( INITIAL_NAMES_QUANTITY );
+        private static int[] NamesHash = new int[ HASH_TABLE_SIZE ];
+        private static bool Initialized;
+        private static int MemorySizeForNames;
     }
 }

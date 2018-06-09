@@ -28,7 +28,7 @@
 namespace VARP.DataStructures
 {
     /* Enum of all embedded names */
-    public enum Names
+    public enum EName
     {
         None,  //< Reserved to be first in list
     }

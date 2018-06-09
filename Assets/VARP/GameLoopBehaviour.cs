@@ -224,7 +224,12 @@ namespace VARP
 
         public Instruction ( Opcode opcode, short ax, short bx )
         {
-            instruction = (uint)( ( (byte)opcode << 24 ) & ( a << 12 ) & b );
+            instruction = (uint)( ( (byte)opcode << 24 ) & ( (ax & 0xFFF) << 12 ) & (bx & 0xFFF) );
+        }
+
+        public Instruction ( Opcode opcode, int axx)
+        {
+            instruction = (uint)( ( (byte)opcode << 24 ) & (axx & 0xFFFFFF));
         }
 
         public Opcode opcode

@@ -301,12 +301,37 @@
     <Compile Include="Assets\VARP\DebugDraw\DrawQuads.cs" />
     <Compile Include="Assets\VARP\DebugDraw\DrawStrings.cs" />
     <Compile Include="Assets\VARP\DebugDraw\DrawTriangles.cs" />
+    <Compile Include="Assets\VARP\Delegates\SAction.cs" />
+    <Compile Include="Assets\VARP\Delegates\SFunction.cs" />
+    <Compile Include="Assets\VARP\Delegates\TAction.cs" />
+    <Compile Include="Assets\VARP\Delegates\TFunction.cs" />
     <Compile Include="Assets\VARP\GameLoopBehaviour.cs" />
     <Compile Include="Assets\VARP\Interfaces\IListNode.cs" />
     <Compile Include="Assets\VARP\Profiler\Profile.cs" />
     <Compile Include="Assets\VARP\SubSystems\SubSystem.cs" />
     <Compile Include="Assets\VARP\SubSystems\SubSystems.cs" />
+    <Compile Include="Assets\VARP\Timing\OncePerFrame.cs" />
+    <Compile Include="Assets\VARP\Timing\ScaledTime.cs" />
+    <Compile Include="Assets\VARP\Timing\Ticker.cs" />
+    <Compile Include="Assets\VARP\Timing\TimeSpan.cs" />
+    <Compile Include="Assets\VARP\Timing\TimeTools.cs" />
+    <Compile Include="Assets\VARP\Tokenizing\Location.cs" />
+    <Compile Include="Assets\VARP\Tokenizing\StringParser.cs" />
+    <Compile Include="Assets\VARP\Tokenizing\Token.cs" />
+    <Compile Include="Assets\VARP\Tokenizing\Tokenizer.cs" />
+    <Compile Include="Assets\VARP\Tokenizing\TokenizerError.cs" />
+    <Compile Include="Assets\VARP\Tokenizing\TokenReader.cs" />
+    <Compile Include="Assets\VARP\Tokenizing\TokenType.cs" />
     <Compile Include="Assets\VARP\UnityFont\TextRenderer.cs" />
+    <Compile Include="Assets\VARP\Utils\BetterStringBuilder.cs" />
+    <Compile Include="Assets\VARP\Utils\BetterTextReader.cs" />
+    <Compile Include="Assets\VARP\Utils\Debug.cs" />
+    <Compile Include="Assets\VARP\Utils\EnumExtensions.cs" />
+    <Compile Include="Assets\VARP\Utils\String\Convertor.cs" />
+    <Compile Include="Assets\VARP\Utils\String\Humanizer.cs" />
+    <Compile Include="Assets\VARP\Utils\String\LoremIpsum.cs" />
+    <Compile Include="Assets\VARP\Utils\String\Sort.cs" />
+    <Compile Include="Assets\VARP\Utils\String\XmlTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\BFILogic.cginc" />

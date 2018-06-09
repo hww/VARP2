@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderInEditor: 1
-  renderInPostRender: 1
+  renderInPostRender: 0
   renderInEndOfFrame: 0
 --- !u!1 &876362945
 GameObject:
