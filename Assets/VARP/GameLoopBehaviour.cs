@@ -29,8 +29,8 @@ public class GameLoopBehaviour : MonoBehaviour {
 
 namespace VARP
 {
+    using Scheme.Data;
     using DataStructures;
-
     /**
      * Game object
      * Used for all actors in the game

@@ -295,9 +295,11 @@
     <Compile Include="Assets\3dParty\BitmapFontImporter\Editor\BFMenuTool.cs" />
     <Compile Include="Assets\3dParty\BitmapFontImporter\Editor\FntParse.cs" />
     <Compile Include="Assets\VARP\DataStructures\Editor\DoubleLinkedListTest.cs" />
-    <Compile Include="Assets\VARP\DataStructures\Editor\NameTest.cs" />
-    <Compile Include="Assets\VARP\DataStructures\Editor\VariantTest.cs" />
-    <Compile Include="Assets\VARP\Tokenizing\Editor\TokenizerTest.cs" />
+    <Compile Include="Assets\VARP\Scheme\Data\Editor\NameTest.cs" />
+    <Compile Include="Assets\VARP\Scheme\Data\Editor\VariantTest.cs" />
+    <Compile Include="Assets\VARP\Scheme\Editor\AstTest.cs" />
+    <Compile Include="Assets\VARP\Scheme\STX\Editor\SyntaxParserTest.cs" />
+    <Compile Include="Assets\VARP\Scheme\Tokenizing\Editor\TokenizerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\3dParty\BitmapFontImporter\Shaders\BFILogic.cginc" />

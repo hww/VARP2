@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace VARP.Profile
 {
-
-    using Name = VARP.DataStructures.Name;
+    using Name = VARP.Scheme.Data.Name;
     using ProfileNode = VARP.DataStructures.LinkedListNode<Profile>;
     using ProfileList = VARP.DataStructures.LinkedList<Profile>;
 

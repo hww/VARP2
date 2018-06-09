@@ -89,7 +89,7 @@ namespace VARP.DataStructures.Test
             intList.AddLast(new LinkedListNode<int>(1));
             intList.AddLast(new LinkedListNode<int>(2));
             intList.AddFirst(new LinkedListNode<int>(0));
-            Debug.Log(stringsList.ToString());
+            Debug.Log(stringsList.ToString ( ));
             int[] intArray = intList.ToArray();
             Debug.Assert(intArray[0] == 0);
             Debug.Assert(intArray[1] == 1);
@@ -102,7 +102,7 @@ namespace VARP.DataStructures.Test
             intusiveList.AddLast(new MyClass(1).link);
             intusiveList.AddLast(new MyClass(2).link);
             intusiveList.AddFirst(new MyClass(0).link);
-            Debug.Log(stringsList.ToString());
+            Debug.Log(stringsList.ToString ( ));
             MyClass[] classArray = intusiveList.ToArray();
             Debug.Assert(classArray[0].value == 0);
             Debug.Assert(classArray[1].value == 1);

@@ -50,7 +50,7 @@ namespace VARP.Utils
         /// Get string of the buffer
         /// </summary>
         /// <returns>String</returns>
-        public override string ToString()
+        public override string ToString ( )
         {
             if (stringCache != null)
                 return stringCache;
