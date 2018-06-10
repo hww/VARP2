@@ -51,7 +51,7 @@ namespace VARP.Scheme.Data
 
         public string GetLocationStringShort ( )
         {
-            return file == null ? string.Empty : string.Format ( ":{0}:{1}", lineNumber, colNumber );
+            return file == null ? string.Empty : string.Format ( "{0}:{1}", lineNumber, colNumber );
         }
 
         public static readonly Location NullLocation = new Location ( 0, 0, 0, null );

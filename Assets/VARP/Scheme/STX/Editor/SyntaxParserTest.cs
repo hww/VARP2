@@ -16,9 +16,9 @@ namespace VARP.Scheme.Syntax.Test
         {
             /** Source code, Expected result */ 
             // List
-            "()","#<syntax:1:1 nil>",
-            "'()","#<syntax:1:1 (quote nil)>",
-            "(()())","#<syntax:1:1 (nil nil)>", // Nested List
+            "()","#<syntax:1:1 ()>",
+            "'()","#<syntax:1:1 (quote ())>",
+            "(()())","#<syntax:1:1 (() ())>", // Nested List
             // Numbers
             "1 1.1 #xFF","#<syntax:1:1 1> #<syntax:1:3 1.1> #<syntax:1:7 255>",           
             // Strings    
@@ -34,14 +34,16 @@ namespace VARP.Scheme.Syntax.Test
             // Dot syntax
             "(1 . 2)","#<syntax:1:1 (1 . 2)>",
             // Quotes
-            "'(,() `() ,@())","#<syntax:1:1 (quote ((unquote nil) (quasiquote nil) (unquote-splicing nil)))>",
+            "'(,() `() ,@())","#<syntax:1:1 (quote ((unquote ()) (quasiquote ()) (unquote-splicing ())))>",
         };
 
         [Test]
         public void ParserTestRun()
         {
+            Name.Init ( );
             for (int i = 0; i < tests.Length; i += 2)
                 Test(tests[i], tests[i + 1]);
+            Name.DeInit ( );
         }
 
         void Test(string source, string expectedResult)
@@ -65,7 +67,7 @@ namespace VARP.Scheme.Syntax.Test
             }
             catch (System.Exception ex)
             {
-                Debug.LogError(string.Format("{0}\n{1}\n{2}", source, ex.Message, ex.StackTrace));
+                Debug.LogError(string.Format("Source: {0}\n{1}\n{2}", source, ex.Message, ex.StackTrace));
             }
         }
 

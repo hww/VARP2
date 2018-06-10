@@ -1,6 +1,7 @@
 ﻿/*  Copyright (c) 2016 Valery Alex P. All rights reserved. */
 
 using System.Collections.Generic;
+using VARP.Utils.String;
 
 namespace VARP.Scheme.Data
 {
@@ -154,6 +155,8 @@ namespace VARP.Scheme.Data
             foreach ( EName name in System.Enum.GetValues ( typeof ( EName ) ) )
             {
                 var namestring = name.ToString ( );
+                if ( (int)name >= (int)EName.SchemeNames )
+                    namestring = Humanizer.Decamelize ( namestring );
                 var nameindex = (int)name;
                 int hashIndex = GetStrigHash ( name.ToString ( ) ) & HASH_TABLE_INDEX_MASK;
                 Names.Add ( new NameEntry ( namestring, NamesHash[ hashIndex ] ) );

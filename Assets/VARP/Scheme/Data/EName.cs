@@ -6,6 +6,8 @@ namespace VARP.Scheme.Data
     public enum EName
     {
         None,  //< Reserved to be first in list
+
+        SchemeNames, //< All names after are designed for scheme and have to be downcased
         Lambda,
         True,
         False,
@@ -13,6 +15,6 @@ namespace VARP.Scheme.Data
         Quote,
         Unquote,
         Quasiquote,
-        Unquotesplice
+        UnquoteSplicing
     }
 }

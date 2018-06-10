@@ -38,8 +38,13 @@ namespace VARP.Scheme.Data
                 return ( (Inspectable)obj ).Inspect ( options );
             return obj.ToString ( );
         }
-
-        public static bool ConvertToBool( object obj )
+        public static string ObjectToString (object obj)
+        {
+            if ( obj == null )
+                return "null";
+            return obj.ToString ( );
+        }
+        public static bool ObjectToBool ( object obj )
         {
             if ( obj == null )
                 return false;

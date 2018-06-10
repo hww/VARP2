@@ -16,7 +16,7 @@ namespace VARP.Utils.String
         /// </summary>
         /// <param name="me"></param>
         /// <returns></returns>
-        public static string ParseOutSpacesAndSymbols(this string me)
+        public static string ParseOutSpacesAndSymbols(string me)
         {
             return Regex.Replace(me, "[^A-Za-z0-9]", string.Empty);
         }
@@ -25,7 +25,7 @@ namespace VARP.Utils.String
         /// Alphabetize the characters in the string.
 		/// It return all characters used in the string.
         /// </summary>
-        public static string Alphabetize(this string s)
+        public static string Alphabetize(string s)
         {
             // 1.
             // Convert to char array.
@@ -40,7 +40,7 @@ namespace VARP.Utils.String
             return new string(a);
         }
 
-        public static string Humanize(this string str, bool capitalize = true)
+        public static string Humanize(string str, bool capitalize = true)
         {
             var output = string.Empty;
             for (var i = 0; i < str.Length; i++)
@@ -74,21 +74,21 @@ namespace VARP.Utils.String
             return output;
         }
 
-        public static string[] Humanize(this string[] str, bool capitalize = true)
+        public static string[] Humanize(string[] str, bool capitalize = true)
         {
             var res = new string[str.Length];
             for (var i = 0; i < str.Length; i++)
-                res[i] = str[i].Humanize(capitalize);
+                res[i] = Humanize( str[ i ], capitalize );
             return res;
         }
 
-        public static string Camelize(this string str)
+        public static string Camelize(string str)
         {
             return Camelize(str, true);
         }
 
 		/// Convert expression: 'foo-bar' to 'FooBar' or 'foobar'
-        public static string Camelize(this string str, bool capitalize)
+        public static string Camelize(string str, bool capitalize)
         {
             var output = string.Empty;
             for (var i = 0; i < str.Length; i++)
@@ -115,7 +115,7 @@ namespace VARP.Utils.String
         }
 
 		/// Convert 'FooBar' to 'foo-bar'
-        public static string Decamelize(this string str)
+        public static string Decamelize(string str)
         {
             var output = string.Empty;
             var small = false;

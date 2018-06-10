@@ -109,7 +109,7 @@ namespace VARP.Scheme.STX
                 case TokenType.Quote: quote = EName.Quote; break;
                 case TokenType.Unquote: quote = EName.Unquote; break;
                 case TokenType.QuasiQuote: quote = EName.Quasiquote; break;
-                case TokenType.UnquoteSplicing: quote = EName.Unquotesplice; break;
+                case TokenType.UnquoteSplicing: quote = EName.UnquoteSplicing; break;
             }
             var quote_stx = Syntax.Create((Name)quote, thisToken.location);
             var nextToken = moreTokens.ReadToken();
@@ -128,14 +128,14 @@ namespace VARP.Scheme.STX
         private static Syntax ParseList(Token thisToken, Tokenizer moreTokens)
         {
             // Is a list/vector
-            var listContents = new List<Syntax>();
+            var listContents = new LinkedList<Syntax>();
             Token dotToken = null;
 
             var nextToken = moreTokens.ReadToken();
             while (nextToken != null && nextToken.type != TokenType.CloseBracket)
             {
                 // Parse this token
-                listContents.Add(ParseToken(nextToken, moreTokens));
+                listContents.AddLast(ParseToken(nextToken, moreTokens));
 
                 // Fetch the next token
                 nextToken = moreTokens.ReadToken();
@@ -152,7 +152,7 @@ namespace VARP.Scheme.STX
                         throw ParserError.SyntaxError("parser", "Improperly formed dotted list", dotToken);
                     if (nextToken.type == TokenType.CloseBracket)
                         throw ParserError.SyntaxError("parser", "Improperly formed dotted list", dotToken);
-                    listContents.Add(ParseToken(nextToken, moreTokens));
+                    listContents.AddLast(ParseToken(nextToken, moreTokens));
                     nextToken = moreTokens.ReadToken();
                     if (nextToken.type != TokenType.CloseBracket)
                         throw ParserError.SyntaxError("parser", "Improperly formed dotted list", dotToken);
@@ -176,7 +176,7 @@ namespace VARP.Scheme.STX
             else
             {
                 if (listContents.Count == 0)
-                    return Syntax.Create(null as LinkedList<Syntax>, thisToken.location );
+                    return Syntax.Create (null as LinkedList<Syntax>, thisToken.location );
                 else
                     return Syntax.Create ( listContents, thisToken.location);
             }

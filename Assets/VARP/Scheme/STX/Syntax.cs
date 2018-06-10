@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace VARP.Scheme.STX
 {
+    using System;
     using Data;
     using DataStructures;
 
@@ -60,8 +61,11 @@ namespace VARP.Scheme.STX
         public virtual bool IsLiteral { get { return false; } }
         public virtual bool IsExpression { get { return false; } }
 
-
         public override bool AsBool ( ) { return true; }
+        public override string Inspect ( InspectOptions options = InspectOptions.Default )
+        {
+            return string.Format ( "#<syntax:{0} {1}>", getLocation ( ).GetLocationStringShort ( ), ToString() );
+        }
 
         public readonly static Syntax Lambda = new SyntaxName ( (Variant)(Name)EName.Lambda );
         public readonly static Syntax Void = new SyntaxName ( (Variant)(Name)EName.Void );
@@ -80,20 +84,14 @@ namespace VARP.Scheme.STX
         public static SyntaxList Create ( List<Syntax> value, Location location = null ) { return new SyntaxList ( value, location ); }
         public static SyntaxLinkedList Create ( LinkedList<Syntax> value, Location location = null ) { return new SyntaxLinkedList ( value, location ); }
 
-        protected string formatForToString(string str)
-        {
-            return string.Format ( "#<syntax{0}: {1}>", getLocation().GetLocationStringShort ( ), str );
-        }
     }
 
     public class SyntaxChar : Syntax
     {
-        public int asChar;
+        public char asChar;
         public SyntaxChar ( char value, Location location = null) : base ( location ) { asChar = value; }
         public override object getDatum ( ) { return asChar; }
-        public override string ToString ( ) {
-            return string.Format ( "#<syntax{0}: '{1}'>", getLocation ( ).GetLocationStringShort ( ), asChar );
-        }
+        public override string ToString ( ) { return NamedCharacter.CharacterToName(asChar); }
         public override bool IsLiteral { get { return true; } }
     }
 
@@ -102,10 +100,7 @@ namespace VARP.Scheme.STX
         public bool asBool;
         public SyntaxBool(bool value, Location location = null ) : base(location) { asBool = value; }
         public override object getDatum()  { return asBool; }
-        public override string ToString ( )
-        {
-            return string.Format ( "#<syntax{0}: {1}>", getLocation ( ).GetLocationStringShort ( ), asBool );
-        }
+        public override string ToString ( ) { return asBool ? "#t" : "#f"; }
         public override bool IsLiteral { get { return true; } }
     }
 
@@ -114,10 +109,7 @@ namespace VARP.Scheme.STX
         public int asInteger;
         public SyntaxInteger ( int value, Location location = null ) : base(location) { asInteger = value; }
         public override object getDatum ( ) { return asInteger; }
-        public override string ToString ( )
-        {
-            return string.Format ( "#<syntax{0}: {1}>", getLocation ( ).GetLocationStringShort ( ), asInteger );
-        }
+        public override string ToString ( ) { return asInteger.ToString ( ); }
         public override bool IsLiteral { get { return true; } }
     }
 
@@ -126,10 +118,7 @@ namespace VARP.Scheme.STX
         public float asFloat;
         public SyntaxFloat ( float value, Location location = null ) : base(location) { asFloat = value; }
         public override object getDatum ( ) { return asFloat; }
-        public override string ToString ( )
-        {
-            return string.Format ( "#<syntax{0}: {1}>", getLocation ( ).GetLocationStringShort ( ), asFloat );
-        }
+        public override string ToString ( ) { return asFloat.ToString ( ); }
         public override bool IsLiteral { get { return true; } }
     }
 
@@ -138,10 +127,7 @@ namespace VARP.Scheme.STX
         public Pair asPair;
         public SyntaxPair ( Pair value, Location location = null ) : base(location) { asPair = value; }
         public override object getDatum ( ) { return asPair; }
-        public override string ToString ( )
-        {
-            return string.Format ( "#<syntax{0}: {1}>", getLocation ( ).GetLocationStringShort ( ), asPair );
-        }
+        public override string ToString ( ) { return asPair.ToString ( ); }
         public override bool IsLiteral { get { return true; } }
     }
 
@@ -150,10 +136,7 @@ namespace VARP.Scheme.STX
         public Name asName;
         public SyntaxName ( Name value, Location location = null ) : base ( location ) { asName = value; }
         public override object getDatum ( ) { return asName; }
-        public override string ToString ( )
-        {
-            return string.Format ( "#<syntax{0}: {1}>", getLocation ( ).GetLocationStringShort ( ), asName );
-        }
+        public override string ToString ( ) { return asName.ToString ( ); }
         public override bool IsIdentifier { get { return asName.IsIdentifier; } }
         public override bool IsSymbol { get { return true; } }
         public override bool IsLiteral { get { return asName.IsKeyword; } }
@@ -162,12 +145,9 @@ namespace VARP.Scheme.STX
     public class SyntaxString : Syntax
     {
         public string asString;
-        public SyntaxString ( string value, Location location = null ) : base(location) { asString = value; }
+        public SyntaxString ( string value, Location location = null ) : base(location) { asString = value != null ? value : string.Empty; }
         public override object getDatum ( ) { return asString; }
-        public override string ToString ( )
-        {
-            return string.Format ( "#<syntax{0}: \"{1}\">", getLocation ( ).GetLocationStringShort ( ), asString );
-        }
+        public override string ToString ( ) { return string.Format("\"{0}\"", asString); }
         public override bool IsLiteral { get { return true; } }
     }
 
@@ -181,12 +161,26 @@ namespace VARP.Scheme.STX
                 result.AddLast ( SyntaxToDatum ( v ) );
             return result;
         }
-        public override string ToString ( )
-        {
-            if ( asList == null)
-                return string.Format ( "#<syntax{0}: null>", getLocation ( ).GetLocationStringShort ( ));
-            return string.Format ( "#<syntax{0}: {1}>", getLocation ( ).GetLocationStringShort ( ), asList.ToString() );
+        public override string ToString ( ) {
+            if ( asList == null )
+                return "#()";
+            var sb = new System.Text.StringBuilder ( );
+            sb.Append ( "#(" );
+            for (var i=0 ; i<asList.Count ; i++)
+            {
+                if (i > 0)
+                    sb.Append ( " " );
+                sb.Append ( SObject.ObjectToString(asList[i]));
+            }
+            sb.Append ( ")" );
+            return sb.ToString();
         }
+
+        private object StringBuilder ( )
+        {
+            throw new NotImplementedException ( );
+        }
+
         public override List<Syntax> toList( Location location = null )
         {
             var result = new List<Syntax> ( );
@@ -214,12 +208,7 @@ namespace VARP.Scheme.STX
                 result.AddLast ( SyntaxToDatum ( val ) );
             return result;
         }
-        public override string ToString ( )
-        {
-            if ( asLinkedList == null )
-                return string.Format ( "#<syntax{0}: ()>", getLocation ( ).GetLocationStringShort ( ) );
-            return string.Format ( "#<syntax{0}: {1}>", getLocation ( ).GetLocationStringShort ( ), asLinkedList.ToString ( ) );
-        }
+        public override string ToString ( ) { return asLinkedList == null ? "()" : asLinkedList.ToString ( ); }
 
         public override List<Syntax> toList ( Location location = null )
         {

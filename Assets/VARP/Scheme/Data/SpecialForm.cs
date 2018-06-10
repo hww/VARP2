@@ -11,7 +11,7 @@ namespace VARP.Scheme.Data
                 return name.index == (int)EName.Quote ||
                        name.index == (int)EName.Quasiquote ||
                        name.index == (int)EName.Unquote ||
-                       name.index == (int)EName.Unquotesplice;
+                       name.index == (int)EName.UnquoteSplicing;
         }
 
         public static string ToSpecialFormString ( Name name )
@@ -24,7 +24,7 @@ namespace VARP.Scheme.Data
                     return "`";
                 case EName.Unquote:
                     return ",";
-                case EName.Unquotesplice:
+                case EName.UnquoteSplicing:
                     return ",@";
                 default:
                     return name.ToString();
