@@ -15,7 +15,7 @@ namespace VARP.Scheme.Tokenizing
                 var val = int.Parse(value, NumberStyles.AllowLeadingSign);
                 return val;
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 throw TokenizerError.ErrorWithName ( "get-integer", "improperly formed int value", value);
             }

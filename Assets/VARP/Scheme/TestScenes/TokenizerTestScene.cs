@@ -5,10 +5,9 @@ using System.IO;
 using VARP.Scheme.Tokenizing;
 using VARP.Scheme.STX;
 using VARP.Scheme.Data;
-using VARP.Scheme.REPL;
 
 [ExecuteInEditMode]
-public class TokenizerTest : MonoBehaviour {
+public class TokenizerTestScene : MonoBehaviour {
     private Tokenizer lexer;
 
     [TextArea(20,100)]
@@ -34,7 +33,7 @@ public class TokenizerTest : MonoBehaviour {
         var token = lexer.ReadToken ( );
         while ( token != null )
         {
-            sb.Append ( Inspector.Inspect ( token ) + " " );
+            sb.Append ( Inspector.InspectObject ( token ) + " " );
             token = lexer.ReadToken ( );
         }
         tokensString = sb.ToString ( );

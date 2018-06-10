@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
+#pragma warning disable CSE0001   
+#pragma warning disable CSE0003
+
 namespace VARP.DataStructures
 {
     // =============================================================================

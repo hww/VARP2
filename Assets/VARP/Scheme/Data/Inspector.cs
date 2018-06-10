@@ -5,11 +5,17 @@ using System.Text;
 using System.Globalization;
 using System.Collections.Generic;
 
-namespace VARP.Scheme.REPL
+namespace VARP.Scheme.Data
 {
     using DataStructures;
     using Data;
     using STX;
+    using AST;
+
+    public interface Inspectable
+    {
+        string Inspect(InspectOptions options = InspectOptions.Default );
+    }
 
     /// <summary>
     /// Formats and prints objects
@@ -19,9 +25,28 @@ namespace VARP.Scheme.REPL
         public const int MAX_ARRAY_PRINT_LEN = 20;
         public const int MAX_CONS_PRINT_LEN = 20;
 
+        public static object NamedChrater { get; private set; }
+
+        // -- Convert to string any object  --------------------------------------------------------------
+
+        public static string ObjectToString (object obj, InspectOptions options = InspectOptions.Default )
+        {
+            if ( obj == null )
+                return "null";
+            switch ( options )
+            {
+                case InspectOptions.Default:
+                    return obj.ToString ( );
+                case InspectOptions.PrettyPrint:
+                    return obj.ToString ( );
+                default:
+                    return obj.ToString ( );
+            }
+        }
+
         // --Inspect any object  -------------------------------------------------------------------------
 
-        public static string Inspect ( Object x, InspectOptions options = InspectOptions.Default )
+        public static string InspectObject ( object x, InspectOptions options = InspectOptions.Default )
         {
             if ( x == null )
                 return "null";
@@ -29,8 +54,8 @@ namespace VARP.Scheme.REPL
             if ( x is Variant )
                 return ((Variant)x).Inspect ();
 
-            if ( x is Inspectable )
-                return ( x as Inspectable ).Inspect ( );
+            if ( x is SObject)
+                return ( (SObject)x ).ToString ( );
 
             return InspectMonoObject ( x, options );
         }
@@ -39,11 +64,21 @@ namespace VARP.Scheme.REPL
 
         private static string InspectMonoObject ( object x, InspectOptions options = InspectOptions.Default )
         {
+            // -- Simple objects will be just printed as it is
+            if ( x is float )
+                return ( (float)x ).ToString ( "0.0###################" );
+
+            if ( x is bool )
+                return ( (bool)x ) ? "#t" : "#f";
+
             if ( x is string )
-                return string.Format ( CultureInfo.CurrentCulture, "\"{0}\"", x );
+                return string.Format ( "\"{0}\"", x );
 
             if ( x is char )
-                return string.Format ( CultureInfo.CurrentCulture, "#\\{0}", x );
+                return NamedCharacter.CharacterToName( (char)x );
+
+            if ( x is Inspectable)
+                return ( x as Inspectable).Inspect(options);
 
             if ( x is LinkedList<object> )
                 return InspectLinkedList ( x as LinkedList<object> );
@@ -58,11 +93,11 @@ namespace VARP.Scheme.REPL
                 return InspectArray ( (Array)x, options );
 
             if ( Type.GetTypeCode ( x.GetType ( ) ) == TypeCode.Object )
-                return string.Format ( CultureInfo.CurrentCulture, "#<{0}>", x.ToString ( ).Trim ( ) );
+                return string.Format ( "#<{0}>", x.ToString ( ).Trim ( ) );
 
             return x.ToString ( ).Trim ( );
-
         }
+
 
         private static string InspectArray ( Array arr, InspectOptions options = InspectOptions.Default )
         {
@@ -101,7 +136,7 @@ namespace VARP.Scheme.REPL
             {
                 try
                 {
-                    sb.Append ( Inspect ( arr.GetValue ( ind ) ) );
+                    sb.Append ( ObjectToString (arr.GetValue ( ind )) ) ;
                     ++printedElts;
                 }
                 catch ( IndexOutOfRangeException )
@@ -158,7 +193,7 @@ namespace VARP.Scheme.REPL
             var consLen = 0;
             while ( curent != null && ++consLen < MAX_CONS_PRINT_LEN )
             {
-                sb.Append ( Inspect ( curent.Value, options ) );
+                sb.Append ( ObjectToString ( curent.Value, options ) );
 
                 curent = curent.Next;
                 if ( curent != null )
@@ -183,7 +218,7 @@ namespace VARP.Scheme.REPL
             {
                 if ( appendSpace )
                     sb.Append ( " " );
-                sb.Append ( Inspect ( v, options ) );
+                sb.Append ( ObjectToString ( v, options ) );
                 appendSpace |= true;
             }
             sb.Append ( ")" );
@@ -199,7 +234,7 @@ namespace VARP.Scheme.REPL
             {
                 if ( appendSpace )
                     sb.Append ( " " );
-                sb.Append ( string.Format ( "#<pair {0} {1}>", Inspect ( v.Key, options ), Inspect ( v.Value, options ) ) );
+                sb.Append ( string.Format ( "#<pair {0} {1}>", ObjectToString ( v.Key, options ), ObjectToString ( v.Value, options ) ) );
                 appendSpace |= true;
             }
             sb.Append ( ")" );

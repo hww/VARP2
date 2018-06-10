@@ -10,7 +10,7 @@ namespace VARP.Scheme.Data
     /// Using class instead of structure let you in future strip
     /// out of runtime debugging information
     /// </summary>
-    public sealed class Location : SObject
+    public sealed class Location : SObject, HasLocation
     {
         public int lineNumber; 
         public int colNumber;
@@ -19,7 +19,7 @@ namespace VARP.Scheme.Data
 
         public Location()
         {
-
+            this.lineNumber = -1; // to disable the location
         }
 
         public Location(int lineNumber, int colNumber, int charNumber, string file)
@@ -38,22 +38,29 @@ namespace VARP.Scheme.Data
             file = location.file;
         }
 
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
+        public override string ToString()
         {
-            return string.Format ( "#<location:{0}:{1} {2}>", lineNumber, colNumber, file );
+            if ( IsValid )
+                return string.Format ( "#<location {0}:{1}:{2}>", file, lineNumber, colNumber );
+            else
+                return string.Empty;
         }
 
-        // -- Makes string in format: "file-path(lineNumber, ColNumber):"
-        public string GetLocationString ( )
+        // -- HasLocation --------------------------------------------------------------------------------
+
+        public Location GetLocation ( )
         {
-            return file==null ? string.Empty : string.Format ( "{0}({1},{2}): ", file, lineNumber, colNumber );
+            return this;
         }
 
-        public string GetLocationStringShort ( )
-        {
-            return file == null ? string.Empty : string.Format ( "{0}:{1}", lineNumber, colNumber );
-        }
+        public bool IsValid { get { return lineNumber >= 0; }  }
 
         public static readonly Location NullLocation = new Location ( 0, 0, 0, null );
+
+    }
+
+    public interface HasLocation
+    {
+        Location GetLocation ( );
     }
 }

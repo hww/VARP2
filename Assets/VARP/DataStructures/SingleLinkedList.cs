@@ -28,6 +28,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+#pragma warning disable CSE0003
+
 namespace VARP.DataStructures
 {
     using Interfaces;

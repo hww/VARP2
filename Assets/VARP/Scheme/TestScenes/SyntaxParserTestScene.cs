@@ -5,10 +5,9 @@ using System.IO;
 using VARP.Scheme.Tokenizing;
 using VARP.Scheme.STX;
 using VARP.Scheme.Data;
-using VARP.Scheme.REPL;
 
 [ExecuteInEditMode]
-public class SyntaxParserTest : MonoBehaviour {
+public class SyntaxParserTestScene : MonoBehaviour {
     private Tokenizer lexer;
 
     [TextArea(20,100)]
@@ -32,11 +31,11 @@ public class SyntaxParserTest : MonoBehaviour {
         // Just tokenized it
         // ------------------------------------------------------------------
         sb = new System.Text.StringBuilder();
-        lexer = new Tokenizer(new StringReader(testString), "TokenizerTest");
+        lexer = new Tokenizer(new StringReader(testString), "SyntaxParserTest" );
         var token = lexer.ReadToken();
         while (token != null)
         {
-            sb.Append(Inspector.Inspect(token) + " ");
+            sb.Append(Inspector.InspectObject(token) + " ");
             token = lexer.ReadToken();
         }
         tokensString = sb.ToString();
@@ -44,13 +43,13 @@ public class SyntaxParserTest : MonoBehaviour {
         // ------------------------------------------------------------------
         // Parse scheme
         // ------------------------------------------------------------------
-        lexer = new Tokenizer(new StringReader(testString), "TokenizerTest");
+        lexer = new Tokenizer(new StringReader(testString), "SyntaxParserTest" );
         sb = new System.Text.StringBuilder();
         do
         {
             SObject result = SyntaxParser.Parse(lexer);
             if (result == null) break;
-            sb.AppendLine(result.Inspect());
+            sb.AppendLine( Inspector.InspectObject ( result ) );
         } while (lexer.LastToken != null);
         resultString = sb.ToString();
         Name.DeInit ( );

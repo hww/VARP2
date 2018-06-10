@@ -128,7 +128,7 @@ namespace VARP.Scheme.STX
         private static Syntax ParseList(Token thisToken, Tokenizer moreTokens)
         {
             // Is a list/vector
-            var listContents = new LinkedList<Syntax>();
+            var listContents = new LinkedList<Syntax> ( );
             Token dotToken = null;
 
             var nextToken = moreTokens.ReadToken();
@@ -175,17 +175,14 @@ namespace VARP.Scheme.STX
             }
             else
             {
-                if (listContents.Count == 0)
-                    return Syntax.Create (null as LinkedList<Syntax>, thisToken.location );
-                else
-                    return Syntax.Create ( listContents, thisToken.location);
+                return Syntax.Create ( listContents, thisToken.location);
             }
 
         }
 
         private static Syntax ParseVector(Token thisToken, Tokenizer moreTokens)
         {
-            var listContents = new List<Syntax>();
+            var listContents = new ListSyntax ( );
             Token dotToken = null;
 
             var nextToken = moreTokens.ReadToken();

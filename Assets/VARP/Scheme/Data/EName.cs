@@ -15,6 +15,6 @@ namespace VARP.Scheme.Data
         Quote,
         Unquote,
         Quasiquote,
-        UnquoteSplicing
+        UnquoteSplicing,
     }
 }

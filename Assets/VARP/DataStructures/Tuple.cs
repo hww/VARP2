@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 
+#pragma warning disable CSE0003
+#pragma warning disable CSE0002
+
 namespace VARP.DataStructures
 {
     public static class Tuple

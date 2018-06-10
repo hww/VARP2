@@ -67,7 +67,6 @@ namespace VARP.Scheme.VM.Functions
 
         public override bool AsBool() { return true; }
         public override string ToString() { return string.Format("#<function {0}>", this.GetType().Name); }
-        public override string Inspect( InspectOptions options = InspectOptions.Default ) { return ToString(); }
 
     }
 }

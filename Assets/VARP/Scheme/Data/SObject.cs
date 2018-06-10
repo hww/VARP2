@@ -3,16 +3,11 @@
 namespace VARP.Scheme.Data
 {
     using System.Diagnostics;
-    using VARP.Scheme.REPL;
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public abstract class SObject : Inspectable
+    public abstract class SObject 
     {
         public virtual bool AsBool() { return false; }
-        public virtual string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return ToString();
-        }
 
         // -- DebuggerDisplay ----------------------------------------------------------------------------
 
@@ -20,7 +15,7 @@ namespace VARP.Scheme.Data
         {
             get {
                 try {
-                    return Inspect ( );
+                    return Inspector.InspectObject ( this );
                 }
                 catch (System.Exception ex) {
                     return string.Format("#<{0} ispect-error='{1}'>", GetType().Name, ex.Message);
@@ -30,20 +25,6 @@ namespace VARP.Scheme.Data
 
         // -- Inspect obct by static  --------------------------------------------------------------------
 
-        public static string InspectObject ( object obj, InspectOptions options = InspectOptions.Default )
-        {
-            if ( obj == null )
-                return "null";
-            if ( obj is Inspectable )
-                return ( (Inspectable)obj ).Inspect ( options );
-            return obj.ToString ( );
-        }
-        public static string ObjectToString (object obj)
-        {
-            if ( obj == null )
-                return "null";
-            return obj.ToString ( );
-        }
         public static bool ObjectToBool ( object obj )
         {
             if ( obj == null )

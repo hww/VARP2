@@ -16,12 +16,7 @@ namespace VARP.Scheme.Data
         public override bool AsBool ( ) { return true; }
         public override string ToString ( )
         {
-            return string.Format ( "({0} . {1})", SObject.ObjectToString ( car ), SObject.ObjectToString ( cdr ) );
+            return string.Format ( "({0} . {1})", Datum.DatumToString ( car ), Datum.DatumToString ( cdr ) );
         }
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("({0} . {1})", SObject.InspectObject ( car ), SObject.InspectObject ( cdr ));
-        }
-
     }
 }

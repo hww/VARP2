@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#pragma warning disable CSE0003
+
 namespace VARP.DebugDraw
 {
     public class DrawStrings : System.IDisposable

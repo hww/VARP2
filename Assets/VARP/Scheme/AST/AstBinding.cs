@@ -25,17 +25,13 @@ namespace VARP.Scheme.AST
         }
 
         public override bool AsBool() { return true; }
-        public override string ToString() { return string.Format("#<binding {0}>", Identifier); }
+        public override string ToString() { return string.Format("#<binding:{0}: {1}>", VarIdx, Identifier ); }
 
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format ( "#<binding {0}>", Identifier );
-        }
     }
 
     public sealed class PrimitiveBinding : AstBinding
     {
-        public delegate AST CompilerPrimitive(Syntax expression, Environment context);
+        public delegate Ast CompilerPrimitive(Syntax expression, Environment context);
 
         public CompilerPrimitive Primitive;     
 
@@ -47,11 +43,7 @@ namespace VARP.Scheme.AST
         }
 
         public override bool AsBool() { return true; }
-        public override string ToString() { return string.Format("#<primitive {0}>", Identifier); }
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format ( "#<primitive {0}>", Identifier );
-        }
+        public override string ToString() { return string.Format("#<primitive:{0}: {1}>", VarIdx, Identifier ); }
     }
     
     public sealed class LocalBinding: AstBinding
@@ -59,7 +51,7 @@ namespace VARP.Scheme.AST
         public LocalBinding(Syntax identifier) : base(identifier) { }
 
         public override bool AsBool() { return true; }
-        public override string ToString() { return string.Format("#<local-binding {0}>", Identifier); }
+        public override string ToString() { return string.Format("#<local-binding:{0}: {1}>", VarIdx, Identifier ); }
     }
     
     public sealed class GlobalBinding : AstBinding
@@ -67,7 +59,7 @@ namespace VARP.Scheme.AST
         public GlobalBinding(Syntax identifier) : base(identifier) { }
 
         public override bool AsBool() { return true; }
-        public override string ToString() { return string.Format("#<global-binding {0}>", Identifier); }
+        public override string ToString() { return string.Format("#<global-binding:{0}: {1}>", VarIdx, Identifier ); }
     }
 
     public sealed class UpBinding : AstBinding
@@ -83,11 +75,7 @@ namespace VARP.Scheme.AST
         }
 
         public override bool AsBool ( ) { return true; }
-        public override string ToString ( ) { return string.Format ( "#<up-binding {0}>", Identifier ); }
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-                return string.Format ( "[{0},{1}] {1}>", UpEnvIdx, UpVarIdx, Identifier );
-        }
+        public override string ToString ( ) { return string.Format ( "#<up-binding:{0}: [{1}:{2}] {3}>", VarIdx, UpEnvIdx, UpVarIdx, Identifier  ); }
     }
 
     public sealed class ArgumentBinding : AstBinding
@@ -105,16 +93,37 @@ namespace VARP.Scheme.AST
 
         public Type ArgType;
         public AstBinding Refrence;
-        public AST Initializer;
+        public Ast Initializer;
 
-        public ArgumentBinding(Syntax identifier, Type type, AST initializer) : base(identifier)
+        public ArgumentBinding(Syntax identifier, Type type, Ast initializer) : base(identifier)
         {
             ArgType = type;
             Initializer = initializer;
         }
 
         public override bool AsBool() { return true; }
-        public override string ToString() { return string.Format("#<arg-binding {0}>", Identifier); }
+        public override string ToString() {
+            switch ( ArgType )
+            {
+                case Type.Required:
+                    return string.Format ( "#<arg-required:{0} {1}>", VarIdx, Identifier );
+                case Type.Optionals:
+                    return string.Format ( "#<arg-optional:{0} {1}>", VarIdx, Identifier );
+                case Type.Key:
+                    return string.Format ( "#<arg-key:{0} {1}>", VarIdx, Identifier );
+                case Type.Rest:
+                    return string.Format ( "#<arg-rest:{0} {1}>", VarIdx, Identifier );
+                case Type.Body:
+                    return string.Format ( "#<arg-body:{0} {1}>", VarIdx, Identifier );
+                case Type.Define:
+                    return string.Format ( "#<arg-define:{0} {1}>", VarIdx, Identifier );
+                case Type.End:
+                    return string.Format ( "#<arg-end:{0} {1}>", VarIdx, Identifier );
+
+            }
+            throw new System.Exception ( );
+
+        }
     }
 
 }

@@ -8,7 +8,7 @@ namespace VARP.Scheme.Tokenizing
     using Data;
     using Exceptions;
 
-    public sealed class Token : SObject
+    public sealed class Token : SObject, HasLocation
     { 
         public TokenType type;
         public string value;
@@ -59,7 +59,7 @@ namespace VARP.Scheme.Tokenizing
                         throw TokenizerError.SyntaxError("get-integer", "wrong token type", this);
                 }
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 throw TokenizerError.SyntaxError("get-integer", "improperly formed int value", this);
             }
@@ -94,26 +94,24 @@ namespace VARP.Scheme.Tokenizing
                 throw TokenizerError.SyntaxError ( "get-character", "improperly formed char value", this );
             }
         }
+
         // -- Conversion ---------------------------------------------------------------------------------
 
-        public override string ToString ( ) {
-            return value;
-        }
-
-        // -- Debugging ----------------------------------------------------------------------------------
-
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
+        public override string ToString ( )
         {
-            if ( location == null )
-                return string.Format ( "#<token \"{0}\">", value );
+            var location = GetLocation ( );
+            if ( location.IsValid )
+                return string.Format ( "#<token:{0}:{1} {2}>", location.lineNumber, location.colNumber, value );
             else
-                return string.Format ( "#<token:{0}:{1} \"{2}\">", location.lineNumber, location.colNumber, value );
+                return string.Format ( "#<token {0}>", value );
         }
+
+        // -- Location -----------------------------------------------------------------------------------
+
         public Location GetLocation ( )
         {
             return location != null ? location : Location.NullLocation;
         }
-
     }
 
 

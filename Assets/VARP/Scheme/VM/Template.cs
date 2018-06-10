@@ -3,10 +3,7 @@
 namespace VARP.Scheme.VM
 {
     using Data;
-    using REPL;
-    using STX;
     using System.Text;
-    using Tokenizing;
 
     internal enum VariableType : byte
     {

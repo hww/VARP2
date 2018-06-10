@@ -5,7 +5,6 @@ namespace VARP.Scheme.AST
     using STX;
     using DataStructures;
     using Data;
-    using REPL;
     using VM;
 
     /// <summary>
@@ -13,7 +12,7 @@ namespace VARP.Scheme.AST
     /// Syntax and Pair. Use the data in existing data structure and do not make copy
     /// Variants without reason. It will make more loaded GC but at same time simpify code.
     /// </summary>
-    public abstract class AST : SObject
+    public abstract class Ast : SObject, HasLocation, HasDatum
     {
         /// <summary>
         /// This is location of the expression
@@ -28,25 +27,34 @@ namespace VARP.Scheme.AST
         /// </summary>
         protected Syntax Expression;   
 
-        public AST(Syntax syntax)
+        public Ast(Syntax syntax)
         {
             Expression = syntax;
         }
 
-        public object GetDatum() { return Expression == null ? null : Expression.getDatum(); }
-        public Syntax GetSyntax() { return Expression; }
-        protected Location GetLocation ( ) { return Expression == null ? Location.NullLocation : Expression.getLocation();  }
+        public Syntax GetSyntax ( ) { return Expression; }
+        public object GetDatum() { return Expression == null ? null : Expression.GetDatum(); }
+        public string GetDatumString ( ) { return Expression == null ? null : Expression.GetDatumString ( ); }
+
+        // -- Location -----------------------------------------------------------------------------------
+
+        public Location GetLocation ( )
+        {
+            return Expression != null ? Expression.GetLocation() : Location.NullLocation;
+        }
 
         // -- SObject Methods ----------------------------------------------------------------------------
 
         public override bool AsBool() { return true; }
-        public override string ToString() { return GetDatum().ToString(); }
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format ( "#<ast{0} {1}>", GetLocationString ( ), ToString ( ) );
-        }
-        protected string GetLocationString() { return GetLocation ( ).GetLocationString ( ); }
 
+        public override string ToString ( )
+        {
+            var location = GetLocation ( );
+            if ( location.IsValid )
+                return string.Format ( "#<ast:{0}:{1} {2}>", location.lineNumber, location.colNumber, GetDatumString ( ) );
+            else
+                return string.Format ( "#<ast {0}>", GetDatumString ( ) );
+        }
 
     }
     
@@ -54,18 +62,13 @@ namespace VARP.Scheme.AST
     // literal e.g. 99 or #f
     // ====================================================================================================
 
-    public sealed class AstLiteral : AST
+    public sealed class AstLiteral : Ast
     {
         public readonly bool isSyntaxLiteral;
 
         public AstLiteral(Syntax stx, bool isSyntaxLiteral = false) : base(stx)
         {
             this.isSyntaxLiteral = isSyntaxLiteral;
-        }
- 
-        public override string Inspect( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("#<ast-literal{0} {1}>", GetLocationString(), Inspector.Inspect(GetDatum()));
         }
     }
 
@@ -78,7 +81,7 @@ namespace VARP.Scheme.AST
     }
 
     // variable reference  e.g. x
-    public sealed class AstReference : AST
+    public sealed class AstReference : Ast
     {
         /// Type of this reference
         public AstReferenceType ReferenceType;
@@ -127,25 +130,19 @@ namespace VARP.Scheme.AST
         public bool IsLocal { get { return ReferenceType == AstReferenceType.Local; } }
         public bool IsGlobal { get { return ReferenceType == AstReferenceType.Global; } }
         public bool IsUpVariant { get { return ReferenceType == AstReferenceType.UpValue; } }
-
-
-        public override string Inspect( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("#<ast-reference{0} {1}>", GetLocationString(), Inspector.Inspect(GetDatum()));
-        }
     }
 
     // variable assignment e.g. (set! x 99)
-    public sealed class AstSet : AST
+    public sealed class AstSet : Ast
     {
         public Syntax Variable;             // x   
         public Name Identifier;
-        public AST Value;                   // 99
+        public Ast Value;                   // 99
         public int VarIdx;                  // index of variable
         public int UpEnvIdx;                // index of environment 
         public int UpVarIdx;                // index of variables
 
-        public AstSet(Syntax syntax, Syntax variable, AST value, int varIdx, int refEnvIdx, int refVarIdx) : base(syntax)
+        public AstSet(Syntax syntax, Syntax variable, Ast value, int varIdx, int refEnvIdx, int refVarIdx) : base(syntax)
         {
             Identifier = ( (SyntaxName)variable ).asName;
             VarIdx = (byte)varIdx;
@@ -156,57 +153,42 @@ namespace VARP.Scheme.AST
         }
         public bool IsGlobal { get { return UpVarIdx < 0; } }
         public bool IsUpVariant { get { return UpEnvIdx > 0; } }
-
-        public override string Inspect( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("#<ast-set{0} {1}>", GetLocationString(), Inspector.Inspect(GetDatum()));
-        }
     }
 
     // conditional e.g. (if 1 2 3)
-    public sealed class AstConditionIf : AST
+    public sealed class AstConditionIf : Ast
     {
         private Syntax Keyword;
-        public AST condExpression;        // 1
-        public AST thenExperssion;        // 2
-        public AST elseExpression;        // 3
+        public Ast condExpression;        // 1
+        public Ast thenExperssion;        // 2
+        public Ast elseExpression;        // 3
 
-        public AstConditionIf(Syntax syntax, Syntax keyword, AST cond, AST then, AST els) : base(syntax)
+        public AstConditionIf(Syntax syntax, Syntax keyword, Ast cond, Ast then, Ast els) : base(syntax)
         {
             Keyword = keyword;
             condExpression = cond;
             thenExperssion = then;
             elseExpression = els;
         }
-
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("#<ast-if{0} {1}>", GetLocationString(), Inspector.Inspect(GetDatum()));
-        }
     }
 
     // conditional e.g. (cond (() .. ) (() ...) (else ...))
-    public sealed class AstCondition : AST
+    public sealed class AstCondition : Ast
     {
         private Syntax Keyword;
-        public LinkedList<AST> Conditions;     //< list of pairs
-        public LinkedList<AST> ElseCase;       //< else condition
+        public LinkedList<Ast> Conditions;     //< list of pairs
+        public LinkedList<Ast> ElseCase;       //< else condition
 
-        public AstCondition(Syntax syntax, Syntax keyword, LinkedList<AST> conditions, LinkedList<AST> elseCase) : base(syntax)
+        public AstCondition(Syntax syntax, Syntax keyword, LinkedList<Ast> conditions, LinkedList<Ast> elseCase) : base(syntax)
         {
             Keyword = keyword;
             Conditions = conditions;
             ElseCase = elseCase;
         }
-
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("#<ast-cond{0} {1}>", GetLocationString(), Inspector.Inspect(GetDatum()));
-        }
     }
 
     // primitive op e.g. (+ 1 2)
-    public sealed class AstPrimitive : AST
+    public sealed class AstPrimitive : Ast
     {
         public Syntax Identifier;
         public LinkedList<Variant> Arguments;
@@ -215,30 +197,20 @@ namespace VARP.Scheme.AST
             Identifier = identifier;
             Arguments = arguments;
         }
-
-        public override string Inspect( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("#<ast-prim{0} {1}>", GetLocationString(), Inspector.Inspect(GetDatum()));
-        }
     }
 
     // application e.g. (f 1 2)
-    public sealed class AstApplication : AST
+    public sealed class AstApplication : Ast
     {
-        public LinkedList<AST> list;
-        public AstApplication(Syntax syntax, LinkedList<AST> expression) : base(syntax)
+        public LinkedList<Ast> list;
+        public AstApplication(Syntax syntax, LinkedList<Ast> expression) : base(syntax)
         {
             list = expression;
-        }
-
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("#<ast-app{0} {1}>", GetLocationString(), Inspector.Inspect(GetDatum()));
         }
     }
 
     // lambda expression   e.g. (lambda(x) x)
-    public sealed class AstLambda : AST
+    public sealed class AstLambda : Ast
     {
         private Syntax Keyword;                      // (<lambda> (...) ...)
         public AstBinding[] ArgList;                 // (lambda <(...)> ) TODO can be replace to reference to Environment!
@@ -248,20 +220,15 @@ namespace VARP.Scheme.AST
         {
             ArgList = environment.ToAstArray();
             BodyExpression = expression;
-            if (((Name)EName.Lambda).Equals(keyword.getDatum ( )))
+            if (((Name)EName.Lambda).Equals(keyword.GetDatum ( )))
                 Keyword = keyword;
             else
-                Keyword = Syntax.Create((Name)EName.Lambda, keyword.getLocation());
-        }
-
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("#<ast-lam{0} {1}>", GetLocationString(), Inspector.Inspect(GetDatum()));
+                Keyword = Syntax.Create((Name)EName.Lambda, keyword.GetLocation());
         }
     }
 
     // sequence e.g. (begin 1 2)
-    public sealed class AstSequence : AST
+    public sealed class AstSequence : Ast
     {
         private Syntax Keyword;
         public LinkedList<Syntax> BodyExpression;
@@ -270,11 +237,6 @@ namespace VARP.Scheme.AST
         {
             Keyword = keyword;
             BodyExpression = expression;
-        }
-
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
-        {
-            return string.Format("#<ast-seq{0} {1}>", GetLocationString(), Inspector.Inspect(GetDatum()));
         }
     }
 

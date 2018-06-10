@@ -4,7 +4,6 @@ namespace VARP.Scheme.VM.Functions
 {
     using Data;
     using UnityEngine;
-    using REPL;
 
     public class Test : Function
     {
@@ -26,9 +25,9 @@ namespace VARP.Scheme.VM.Functions
             else
             {
                 if (b == 2)
-                    Debug.LogErrorFormat("Expect: {0}\n  Found: {1}", Inspector.Inspect(left), Inspector.Inspect(right));
+                    Debug.LogErrorFormat("Expect: {0}\n  Found: {1}", Inspector.InspectObject(left), Inspector.InspectObject(right));
                 else
-                    Debug.LogErrorFormat("{0}\n  Expect: {1}\n  Found: {2}", frame.Values[a + 3], Inspector.Inspect(left), Inspector.Inspect(right));
+                    Debug.LogErrorFormat("{0}\n  Expect: {1}\n  Found: {2}", frame.Values[a + 3], Inspector.InspectObject(left), Inspector.InspectObject(right));
                 frame.Values[a] = (Variant)false;
             }
         }

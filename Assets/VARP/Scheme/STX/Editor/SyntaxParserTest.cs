@@ -6,6 +6,7 @@ using System.IO;
 using VARP.Scheme.Tokenizing;
 using VARP.Scheme.STX;
 using VARP.Scheme.Data;
+using VARP.Scheme.Exceptions;
 
 namespace VARP.Scheme.Syntax.Test
 {
@@ -59,13 +60,13 @@ namespace VARP.Scheme.Syntax.Test
                     SObject result = SyntaxParser.Parse(lexer);
                     if (result == null) break;
                     if (addSpace) sb.Append(" "); else addSpace = true; 
-                    sb.Append(result.Inspect());
+                    sb.Append( Inspector.InspectObject(result));
                     
                 } while (lexer.LastToken != null);
                 string sresult = sb.ToString();
                 Assert.AreEqual(expectedResult, sresult);
             }
-            catch (System.Exception ex)
+            catch (BaseSchemeError ex)
             {
                 Debug.LogError(string.Format("Source: {0}\n{1}\n{2}", source, ex.Message, ex.StackTrace));
             }

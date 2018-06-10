@@ -5,7 +5,6 @@
 namespace VARP.Scheme.VM
 {
     using Data;
-    using REPL;
     using System.Text;
     using Exceptions;
     using STX;
@@ -14,7 +13,7 @@ namespace VARP.Scheme.VM
     using Functions;
     using UnityEngine;
 
-    public class Environment : SObject, IEnumerable<Binding>
+    public class Environment : SObject, IEnumerable<Binding>, Inspectable
     {
         //! Default capacity of new environment
         public const int DEFAULT_ENVIRONMENT_CAPACITY = 16;
@@ -454,7 +453,7 @@ namespace VARP.Scheme.VM
 
         #region Debuggin and Inspection
 
-        public override string Inspect ( InspectOptions options = InspectOptions.Default )
+        public string Inspect ( InspectOptions options = InspectOptions.Default )
         {
             if ( options == InspectOptions.PrettyPrint )
                 return InspectPrettyPrint ( );
@@ -467,7 +466,7 @@ namespace VARP.Scheme.VM
         { 
             var sb = new StringBuilder ( );
             foreach ( var v in Bindings )
-                sb.AppendLine ( Inspector.Inspect ( v.Value ) );
+                sb.AppendLine ( Inspector.InspectObject ( v.Value ) );
             return sb.ToString ( );
         }
 
@@ -478,7 +477,7 @@ namespace VARP.Scheme.VM
             var sb = new StringBuilder ( );
             sb.AppendLine ( tabstr + "Lexical Environment" );
             foreach ( var b in this )
-                sb.AppendLine ( tabstr + SObject.InspectObject ( b, InspectOptions.PrettyPrint ) );
+                sb.AppendLine ( tabstr + Inspector.InspectObject ( b, InspectOptions.PrettyPrint ) );
             return sb.ToString ( );
         }
     

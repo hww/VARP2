@@ -7,11 +7,6 @@ namespace VARP.Scheme.Tokenizing
     public sealed class TokenReader
     {
         /// <summary>
-        /// Constructor that can be used by subclasses that don't want to provide tokens via a TextReader
-        /// </summary>
-        protected TokenReader() { }
-
-        /// <summary>
         /// Constructs a token stream that reads token from the given TextReader
         /// </summary>
         /// <param name="textStream">The stream to read tokens from</param>

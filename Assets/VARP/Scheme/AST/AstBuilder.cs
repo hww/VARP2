@@ -22,14 +22,14 @@ namespace VARP.Scheme.AST
         #region Public Methods
 
         // Expand string @expression to abstract syntax tree, in given @env environment
-        public static AST Expand(string expression, string filepath, Environment env)
+        public static Ast Expand(string expression, string filepath, Environment env)
         {
             var syntax = SyntaxParser.Parse(expression, filepath);
             return Expand(syntax, env);
         }
 
         // Expand string @syntax to abstract syntax tree, in global environment
-        public static AST Expand(Syntax syntax, Environment env)
+        public static Ast Expand(Syntax syntax, Environment env)
         {
             if (!env.IsLexical) throw new System.Exception("Expected Lexical environment");
             //if ((options & Options.NoLambda) == 0)
@@ -52,7 +52,7 @@ namespace VARP.Scheme.AST
         }
 
         // Expand string @syntax to abstract syntax tree, in given @env environment
-        public static AST ExpandInternal(Syntax syntax, Environment env)
+        public static Ast ExpandInternal(Syntax syntax, Environment env)
         {
             if (syntax == null)
                 return null;
@@ -71,18 +71,18 @@ namespace VARP.Scheme.AST
         #region Private Expand Methods
 
         // aka: 99
-        public static AST ExpandLiteral(Syntax syntax, Environment env)
+        public static Ast ExpandLiteral(Syntax syntax, Environment env)
         {
             // n.b. value '() is null it will be as literal
             return new AstLiteral(syntax);
         }
 
         // aka: x
-        public static AST ExpandIdentifier(Syntax syntax, Environment env)
+        public static Ast ExpandIdentifier(Syntax syntax, Environment env)
         {
             if (!syntax.IsIdentifier) throw SchemeError.SyntaxError("ast-builder-expand-identifier", "expected identifier", syntax);
 
-            var varname = (Name)syntax.getDatum();
+            var varname = (Name)syntax.GetDatum();
 
             // Check and expand some of literals
             if (varname == EName.None)
@@ -140,10 +140,10 @@ namespace VARP.Scheme.AST
         }
 
         // aka: (...)
-        public static AST ExpandExpression(Syntax syntax, Environment env)
+        public static Ast ExpandExpression(Syntax syntax, Environment env)
         {
-            var list = syntax.toLinkedList ( );
-            if (list == null)
+            var list = (syntax  as SyntaxLinkedList).ToLinkedList ( );
+            if (list.Count == 0)
                 return new AstApplication(syntax, null);
             var ident = list[0] as Syntax;
             if (ident.IsIdentifier)
@@ -161,11 +161,11 @@ namespace VARP.Scheme.AST
 
         // Expand list of syntax objects as: (#<syntax> #<syntax> ...)
         // aka: (...)
-        public static LinkedList<AST> ExpandListElements(LinkedList<Syntax> list, int index, Environment env)
+        public static LinkedList<Ast> ExpandListElements(LinkedList<Syntax> list, int index, Environment env)
         {
             if (list == null) return null;
 
-            var result = new LinkedList<AST> ();
+            var result = new LinkedList<Ast> ();
 
             foreach (var v in list)
             {

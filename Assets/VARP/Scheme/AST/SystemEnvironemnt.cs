@@ -9,10 +9,20 @@ namespace VARP.Scheme.AST
 
     public class SystemEnvironment : Environment
     {
-        public static SystemEnvironment Top = new SystemEnvironment();
+        public static SystemEnvironment Top;
+
+        public static void Init()
+        {
+            Top = new SystemEnvironment ( );
+        }
+
+        public static void DeInit ()
+        {
+            Top = null;
+        }
 
         public SystemEnvironment()
-            : base (null, Name.Intern("*SYSTEM-ENV*"), 1000)
+            : base (null, Name.Intern("*SYSTEM-ENV*"), true, 1000)
         {
             /*
             DefinePrimitive("define", PrimitiveDefine.Expand);

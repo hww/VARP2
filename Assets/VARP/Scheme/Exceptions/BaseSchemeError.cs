@@ -67,13 +67,17 @@ namespace VARP.Scheme.Exceptions
 
         protected static string GetLocationString ( object x )
         {
+            Location location = null;
             if ( x is Location )
-                return ( x as Location ).GetLocationString ( );
-            if ( x is Token )
-                return ( x as Token ).GetLocation ( ).GetLocationString ( );
-            if ( x is Syntax )
-                return ( x as Syntax ).getLocation ( ).GetLocationString ( );
-            return string.Empty;
+                location = ( x as Location );
+            else if ( x is Token )
+                location = ( x as Token ).GetLocation ( );
+            else if ( x is Syntax )
+                location = ( x as Syntax ).GetLocation ( );
+            if ( location.IsValid )
+                return string.Format ( "{0}:{1}:{2}", location.file, location.lineNumber, location.colNumber );
+            else
+                return string.Empty;
         }
 
         // -- Inspector --------------------------------------------------------------------------------------
