@@ -326,6 +326,8 @@
     <Compile Include="Assets\VARP\Scheme\REPL\Inspector.cs" />
     <Compile Include="Assets\VARP\Scheme\STX\Syntax.cs" />
     <Compile Include="Assets\VARP\Scheme\STX\SyntaxParser.cs" />
+    <Compile Include="Assets\VARP\Scheme\TestScenes\SyntaxParserTest.cs" />
+    <Compile Include="Assets\VARP\Scheme\TestScenes\TokenizerTest.cs" />
     <Compile Include="Assets\VARP\Scheme\Tokenizing\StringParser.cs" />
     <Compile Include="Assets\VARP\Scheme\Tokenizing\Token.cs" />
     <Compile Include="Assets\VARP\Scheme\Tokenizing\Tokenizer.cs" />
