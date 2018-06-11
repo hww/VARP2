@@ -286,9 +286,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ExampleClass.cs" />
-    <Compile Include="Assets\VARP\Console\Buffer.cs" />
     <Compile Include="Assets\VARP\Console\Console.cs" />
-    <Compile Include="Assets\VARP\Console\Mode.cs" />
     <Compile Include="Assets\VARP\Console\NativeFunction.cs" />
     <Compile Include="Assets\VARP\Console\NativeFunctionRepl.cs" />
     <Compile Include="Assets\VARP\Console\NativeFunctions.cs" />
@@ -311,6 +309,12 @@
     <Compile Include="Assets\VARP\Delegates\TFunction.cs" />
     <Compile Include="Assets\VARP\GameLoopBehaviour.cs" />
     <Compile Include="Assets\VARP\Interfaces\IListNode.cs" />
+    <Compile Include="Assets\VARP\Keyboard\Buffer.cs" />
+    <Compile Include="Assets\VARP\Keyboard\Event.cs" />
+    <Compile Include="Assets\VARP\Keyboard\Kbd.cs" />
+    <Compile Include="Assets\VARP\Keyboard\KeyMap.cs" />
+    <Compile Include="Assets\VARP\Keyboard\MenuLineBase.cs" />
+    <Compile Include="Assets\VARP\Keyboard\Mode.cs" />
     <Compile Include="Assets\VARP\Profiler\Profile.cs" />
     <Compile Include="Assets\VARP\Scheme\AST\Ast.cs" />
     <Compile Include="Assets\VARP\Scheme\AST\AstBinding.cs" />
