@@ -286,6 +286,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ExampleClass.cs" />
+    <Compile Include="Assets\VARP\Console\Buffer.cs" />
+    <Compile Include="Assets\VARP\Console\Console.cs" />
+    <Compile Include="Assets\VARP\Console\Mode.cs" />
+    <Compile Include="Assets\VARP\Console\NativeFunction.cs" />
+    <Compile Include="Assets\VARP\Console\NativeFunctionRepl.cs" />
+    <Compile Include="Assets\VARP\Console\NativeFunctions.cs" />
+    <Compile Include="Assets\VARP\Console\ReadLine.cs" />
     <Compile Include="Assets\VARP\DataStructures\Entry.cs" />
     <Compile Include="Assets\VARP\DataStructures\LinkedList.cs" />
     <Compile Include="Assets\VARP\DataStructures\SingleLinkedList.cs" />
@@ -344,6 +351,12 @@
     <Compile Include="Assets\VARP\Scheme\VM\Template.cs" />
     <Compile Include="Assets\VARP\SubSystems\SubSystem.cs" />
     <Compile Include="Assets\VARP\SubSystems\SubSystems.cs" />
+    <Compile Include="Assets\VARP\Terminal\Buffer.cs" />
+    <Compile Include="Assets\VARP\Terminal\ITerminal.cs" />
+    <Compile Include="Assets\VARP\Terminal\TangoTheme.cs" />
+    <Compile Include="Assets\VARP\Terminal\Terminal.cs" />
+    <Compile Include="Assets\VARP\Terminal\TerminalCursor.cs" />
+    <Compile Include="Assets\VARP\Terminal\Xresources.cs" />
     <Compile Include="Assets\VARP\Timing\OncePerFrame.cs" />
     <Compile Include="Assets\VARP\Timing\ScaledTime.cs" />
     <Compile Include="Assets\VARP\Timing\Ticker.cs" />

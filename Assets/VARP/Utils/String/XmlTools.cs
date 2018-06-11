@@ -1,9 +1,5 @@
 /* Copyright (c) 2016 Valery Alex P. All rights reserved. */
 
-using System.Text.RegularExpressions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace VARP.Utils.String

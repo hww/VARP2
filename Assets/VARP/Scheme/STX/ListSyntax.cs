@@ -8,6 +8,7 @@ namespace VARP.Scheme.STX
 
     public class ListSyntax : List<Syntax>
     {
+
         public override string ToString ( )
         {
             var sb = new StringBuilder ( );
@@ -17,7 +18,7 @@ namespace VARP.Scheme.STX
             {
                 if ( appendSpace )
                     sb.Append ( " " );
-                sb.Append ( Inspector.ObjectToString(v) );
+                sb.Append ( Datum.ObjectToString(v) );
                 appendSpace |= true;
             }
             sb.Append ( ")" );

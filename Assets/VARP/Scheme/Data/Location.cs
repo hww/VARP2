@@ -10,7 +10,7 @@ namespace VARP.Scheme.Data
     /// Using class instead of structure let you in future strip
     /// out of runtime debugging information
     /// </summary>
-    public sealed class Location : SObject, HasLocation
+    public sealed class Location : SObject
     {
         public int lineNumber; 
         public int colNumber;
@@ -46,13 +46,7 @@ namespace VARP.Scheme.Data
                 return string.Empty;
         }
 
-        // -- HasLocation --------------------------------------------------------------------------------
-
-        public Location GetLocation ( )
-        {
-            return this;
-        }
-
+        // Valid location realy reffers to some source code location
         public bool IsValid { get { return lineNumber >= 0; }  }
 
         public static readonly Location NullLocation = new Location ( 0, 0, 0, null );

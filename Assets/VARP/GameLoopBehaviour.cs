@@ -45,6 +45,9 @@ namespace VARP
         public GObject collider;
         public GObject interrupter;
         public LinkedList<GObject> children = new LinkedList<GObject> ( );
+        public Name type;
+        public Name initialSate;
+        public Template template;
 
         public GObject ( ) : base ( null )
         {
@@ -68,6 +71,10 @@ namespace VARP
 
         }
 
+        public override string ToString ( )
+        {
+            return string.Format( "#<gobct {0}>");
+        }
     }
 
     /** The pointer to the object by number of the objects in memory */

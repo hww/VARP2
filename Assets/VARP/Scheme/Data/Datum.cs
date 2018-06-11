@@ -12,7 +12,7 @@ namespace VARP.Scheme.Data
 
     public static class Datum
     {
-        public static string DatumToString(object datum)
+        public static string ObjectToString (object datum)
         {
             if ( datum == null )
                 return "null";
@@ -22,14 +22,8 @@ namespace VARP.Scheme.Data
                 return ( (HasDatum)datum ).GetDatumString ( );
             if ( datum is bool )
                 return ( (bool)datum ) ? "#t" : "#f";
-            if ( datum is int )
-                return ( (int)datum ).ToString ( );
-            if ( datum is float )
-                return ( (float)datum ).ToString ( );
-            if ( datum is Name )
-                return ( (Name)datum ).ToString ( );
-            if ( datum is Name )
-                return ( (Name)datum ).ToString ( );
+
+            //  all another object will be converted by 
             return datum.ToString ( );
         }
 

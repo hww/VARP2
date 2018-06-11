@@ -145,6 +145,8 @@ namespace VARP.Scheme.Data
         {
             return string.Format ( "#<variant:{0} {1}>", type.ToString().ToLower(), ToString() );
         }
+
+
     }
 
 }

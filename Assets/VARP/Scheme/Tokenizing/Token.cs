@@ -106,6 +106,17 @@ namespace VARP.Scheme.Tokenizing
                 return string.Format ( "#<token {0}>", value );
         }
 
+        public string ToSource ()
+        {
+            switch ( type )
+            {
+                case TokenType.String:
+                    return "\"" + value + "\"";
+                default:
+                    return value;
+            }
+        }
+
         // -- Location -----------------------------------------------------------------------------------
 
         public Location GetLocation ( )
